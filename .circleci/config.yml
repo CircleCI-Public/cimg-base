@@ -1,0 +1,81 @@
+version: 2.1
+
+workflows:
+  monthly-release:
+    triggers:
+      - schedule:
+          cron: "0 0 2 * *"
+          filters:
+            branches:
+              only: master
+    jobs:
+      - test
+      - publish-monthly:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+          context: org-global
+  main:
+    jobs:
+      - test
+      - publish-edge:
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+          context: org-global
+
+
+version: 2
+jobs:
+  test:
+    docker:
+      - image: docker:stable-git
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: "Make sure Dockerfile Builds"
+          command: docker build -t cibuilds/base:$CIRCLE_SHA1 .
+      # We need to run the image and test the tools we pre-install here in the future
+
+  publish-edge:
+    docker:
+      - image: docker:stable-git
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: "Build Docker Image"
+          command: docker build -t cibuilds/base:$CIRCLE_SHA1 .
+      - run:
+          name: "Prepare & Publish Image"
+          command: |
+            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:edge
+
+            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+            docker push cibuilds/base
+
+  publish-monthly:
+    docker:
+      - image: docker:stable-git
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Build Docker Image"
+          command: docker build --pull -t cibuilds/base:$CIRCLE_SHA1 .
+      - run:
+          name: "Prepare & Publish Image"
+          command: |
+            VERSION=$( date +%Y.%m )
+            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:latest
+            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:${VERSION}
+
+            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+            docker push cibuilds/base
