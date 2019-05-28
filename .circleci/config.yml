@@ -97,14 +97,14 @@ workflows:
     triggers:
       - schedule:
           cron: "0 0 2 * *"
-          filter: *master_filters
+          filters: *master_filters
     jobs:
       - publish-monthly:
           context: org-global
-          filter: *master_filters
+          filters: *master_filters
 
   main:
     jobs:
       - publish-edge:
           context: org-global
-          filter: *master_filters
+          filters: *master_filters
