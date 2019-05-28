@@ -4,7 +4,12 @@ orbs:
   docker: circleci/docker@0.3.1
 
 jobs:
-  publish-edge:
+  edge:
+    parameters:
+      publish:
+        type: boolean
+        default: false
+
     executor:
       name: docker/machine
       docker-layer-caching: true
@@ -21,26 +26,29 @@ jobs:
           image: circleciimages/base
           tag: "$CIRCLE_SHA1-node"
 
-      - docker/check:
-          docker-username: DOCKER_USER
-          docker-password: DOCKER_PASS
+      - when:
+          condition: <<parameters.publish>>
+          steps:
+            - docker/check:
+                docker-username: DOCKER_USER
+                docker-password: DOCKER_PASS
 
-      - run:
-          name: Tag images (edge)
-          command: |
-            docker tag "circleciimages/base:$CIRCLE_SHA1" circleciimages/base:edge
+            - run:
+                name: Tag images (edge)
+                command: |
+                  docker tag "circleciimages/base:$CIRCLE_SHA1" circleciimages/base:edge
 
-            docker tag "circleciimages/base:$CIRCLE_SHA1-node" circleciimages/base:edge-node
+                  docker tag "circleciimages/base:$CIRCLE_SHA1-node" circleciimages/base:edge-node
 
-      - docker/push:
-          image: circleciimages/base
-          tag: edge
+            - docker/push:
+                image: circleciimages/base
+                tag: edge
 
-      - docker/push:
-          image: circleciimages/base
-          tag: edge-node
+            - docker/push:
+                image: circleciimages/base
+                tag: edge-node
 
-  publish-monthly:
+  monthly:
     executor:
       name: docker/machine
       docker-layer-caching: true
@@ -91,12 +99,17 @@ workflows:
           cron: "0 0 2 * *"
           filters: *master_filters
     jobs:
-      - publish-monthly:
+      - monthly:
           context: org-global
           filters: *master_filters
 
   main:
     jobs:
-      - publish-edge:
+      - edge:
+          name: edge-test
+
+      - edge:
+          name: edge-test-publish
           context: org-global
+          publish: true
           filters: *master_filters
