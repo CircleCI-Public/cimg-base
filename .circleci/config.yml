@@ -1,35 +1,5 @@
 version: 2.1
 
-workflows:
-  monthly-release:
-    triggers:
-      - schedule:
-          cron: "0 0 2 * *"
-          filters:
-            branches:
-              only: master
-    jobs:
-      - test
-      - publish-monthly:
-          requires:
-            - test
-          filters:
-            branches:
-              only: master
-          context: org-global
-  main:
-    jobs:
-      - test
-      - publish-edge:
-          requires:
-            - test
-          filters:
-            branches:
-              only: master
-          context: org-global
-
-
-version: 2
 jobs:
   test:
     docker:
@@ -79,3 +49,32 @@ jobs:
 
             echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
             docker push cibuilds/base
+
+workflows:
+  monthly-release:
+    triggers:
+      - schedule:
+          cron: "0 0 2 * *"
+          filters:
+            branches:
+              only: master
+    jobs:
+      - test
+      - publish-monthly:
+          context: org-global
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
+
+  main:
+    jobs:
+      - test
+      - publish-edge:
+          context: org-global
+          requires:
+            - test
+          filters:
+            branches:
+              only: master
