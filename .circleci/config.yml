@@ -12,19 +12,16 @@ jobs:
       - checkout
 
       - docker/build:
-          name: Build base image (edge)
           path: ubuntu
           image: circleciimages/base
           tag: "$CIRCLE_SHA1"
 
       - docker/build:
-          name: Build base image's Node variant (edge)
           path: variant-node
           image: circleciimages/base
           tag: "$CIRCLE_SHA1-node"
 
       - docker/check:
-          name: Log into Docker Hub
           docker-username: DOCKER_USER
           docker-password: DOCKER_PASS
 
@@ -35,12 +32,10 @@ jobs:
             docker tag "circleciimages/base:$CIRCLE_SHA1-node" circleciimages/base:edge-node
 
       - docker/push:
-          name: Push base image (edge)
           image: circleciimages/base
           tag: edge
 
       - docker/push:
-          name: Push base image's Node variant (edge)
           image: circleciimages/base
           tag: edge-node
 
@@ -52,14 +47,12 @@ jobs:
       - checkout
 
       - docker/build:
-          name: Build base image (monthly)
           path: ubuntu
           image: circleciimages/base
           tag: "$CIRCLE_SHA1"
           extra_build_args: --pull
 
       - docker/build:
-          name: Build base image's Node variant (monthly)
           path: variant-node
           image: circleciimages/base
           tag: "$CIRCLE_SHA1-node"
@@ -74,17 +67,14 @@ jobs:
             docker tag "circleciimages/base:$CIRCLE_SHA1-node" "circleciimages/base:${VERSION}-node"
 
       - docker/check:
-          name: Log into Docker Hub
           docker-username: DOCKER_USER
           docker-password: DOCKER_PASS
 
       - docker/push:
-          name: Push base image (monthly)
           image: circleciimages/base
           tag: "$( date +%Y.%m )"
 
       - docker/push:
-          name: Push base image's Node variant (monthly)
           image: circleciimages/base
           tag: "$( date +%Y.%m )-node"
 
