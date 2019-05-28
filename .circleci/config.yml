@@ -1,96 +1,110 @@
 version: 2.1
 
 orbs:
-  orb-tools: circleci/orb-tools@8.13.1
+  docker: circleci/docker@0.3.1
 
 jobs:
-  test:
-    executor:
-      name: orb-tools/machine
-      dlc: true
-    steps:
-      - checkout
-
-      - run:
-          name: Make sure Dockerfile builds
-          command: |
-            docker build -t "circleciimages/base:$CIRCLE_SHA1" ubuntu
-            docker build -t "circleciimages/base:$CIRCLE_SHA1-node" variant-node
-
   publish-edge:
     executor:
-      name: orb-tools/machine
-      dlc: true
+      name: docker/machine
+      docker-layer-caching: true
     steps:
       - checkout
 
-      - run:
-          name: Build Docker images
-          command: |
-            docker build -t "circleciimages/base:$CIRCLE_SHA1" ubuntu
-            docker build -t "circleciimages/base:$CIRCLE_SHA1-node" ubuntu
+      - docker/build:
+          name: Build base image (edge)
+          path: ubuntu
+          image: circleciimages/base
+          tag: "$CIRCLE_SHA1"
+
+      - docker/build:
+          name: Build base image's Node variant (edge)
+          path: variant-node
+          image: circleciimages/base
+          tag: "$CIRCLE_SHA1-node"
+
+      - docker/check:
+          name: Log into Docker Hub
+          docker-username: DOCKER_USER
+          docker-password: DOCKER_PASS
 
       - run:
-          name: Prepare and publish image
+          name: Tag images (edge)
           command: |
             docker tag "circleciimages/base:$CIRCLE_SHA1" circleciimages/base:edge
             docker tag "circleciimages/base:$CIRCLE_SHA1-node" circleciimages/base:edge-node
 
-            echo "$DOCKER_PASS" | docker login --username "$DOCKER_USER" --password-stdin
+      - docker/push:
+          name: Push base image (edge)
+          image: circleciimages/base
+          tag: edge
 
-            docker push circleciimages/base:edge
-            docker push circleciimages/base:edge-node
+      - docker/push:
+          name: Push base image's Node variant (edge)
+          image: circleciimages/base
+          tag: edge-node
 
   publish-monthly:
     executor:
-      name: orb-tools/machine
-      dlc: true
+      name: docker/machine
+      docker-layer-caching: true
     steps:
       - checkout
 
-      - run:
-          name: Build Docker images
-          command: |
-            docker build --pull -t "cibuilds/base:$CIRCLE_SHA1" ubuntu
-            docker build --pull -t "cibuilds/base:$CIRCLE_SHA1-node" variant-node
+      - docker/build:
+          name: Build base image (monthly)
+          path: ubuntu
+          image: circleciimages/base
+          tag: "$CIRCLE_SHA1"
+          extra_build_args: --pull
+
+      - docker/build:
+          name: Build base image's Node variant (monthly)
+          path: variant-node
+          image: circleciimages/base
+          tag: "$CIRCLE_SHA1-node"
+          extra_build_args: --pull
 
       - run:
-          name: Prepare and publish images
+          name: Tag images (monthly)
           command: |
             VERSION=$( date +%Y.%m )
+
             docker tag "circleciimages/base:$CIRCLE_SHA1" "circleciimages/base:${VERSION}"
             docker tag "circleciimages/base:$CIRCLE_SHA1-node" "circleciimages/base:${VERSION}-node"
 
-            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+      - docker/check:
+          name: Log into Docker Hub
+          docker-username: DOCKER_USER
+          docker-password: DOCKER_PASS
 
-            docker push "circleciimages/base:${VERSION}"
-            docker push "circleciimages/base:${VERSION}-node"
+      - docker/push:
+          name: Push base image (monthly)
+          image: circleciimages/base
+          tag: "$( date +%Y.%m )"
+
+      - docker/push:
+          name: Push base image's Node variant (monthly)
+          image: circleciimages/base
+          tag: "$( date +%Y.%m )-node"
+
+master_filters: &integration-master_filters
+  branches:
+    only: master
 
 workflows:
   monthly-release:
     triggers:
       - schedule:
           cron: "0 0 2 * *"
-          filters:
-            branches:
-              only: master
+          filter: *master_filters
     jobs:
-      - test
       - publish-monthly:
           context: org-global
-          requires:
-            - test
-          filters:
-            branches:
-              only: master
+          filter: *master_filters
 
   main:
     jobs:
-      - test
       - publish-edge:
           context: org-global
-          requires:
-            - test
-          filters:
-            branches:
-              only: master
+          filter: *master_filters
