@@ -29,6 +29,7 @@ jobs:
           name: Tag images (edge)
           command: |
             docker tag "circleciimages/base:$CIRCLE_SHA1" circleciimages/base:edge
+
             docker tag "circleciimages/base:$CIRCLE_SHA1-node" circleciimages/base:edge-node
 
       - docker/push:
@@ -64,6 +65,7 @@ jobs:
             VERSION=$( date +%Y.%m )
 
             docker tag "circleciimages/base:$CIRCLE_SHA1" "circleciimages/base:${VERSION}"
+
             docker tag "circleciimages/base:$CIRCLE_SHA1-node" "circleciimages/base:${VERSION}-node"
 
       - docker/check:
