@@ -1,54 +1,69 @@
 version: 2.1
 
+orb-tools: circleci/orb-tools@8.13.1
+
 jobs:
   test:
-    docker:
-      - image: docker:stable-git
+    executor:
+      name: orb-tools/machine
+      dlc: true
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+
       - run:
-          name: "Make sure Dockerfile Builds"
-          command: docker build -t cibuilds/base:$CIRCLE_SHA1 .
-      # We need to run the image and test the tools we pre-install here in the future
+          name: Make sure Dockerfile builds
+          command: |
+            docker build -t "circleciimages/base:$CIRCLE_SHA1" ubuntu
+            docker build -t "circleciimages/base:$CIRCLE_SHA1-node" variant-node
 
   publish-edge:
-    docker:
-      - image: docker:stable-git
+    executor:
+      name: orb-tools/machine
+      dlc: true
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: "Build Docker Image"
-          command: docker build -t cibuilds/base:$CIRCLE_SHA1 .
-      - run:
-          name: "Prepare & Publish Image"
-          command: |
-            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:edge
 
-            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-            docker push cibuilds/base
+      - run:
+          name: Build Docker images
+          command: |
+            docker build -t "circleciimages/base:$CIRCLE_SHA1" ubuntu
+            docker build -t "circleciimages/base:$CIRCLE_SHA1-node" ubuntu
+
+      - run:
+          name: Prepare and publish image
+          command: |
+            docker tag "circleciimages/base:$CIRCLE_SHA1" circleciimages/base:edge
+            docker tag "circleciimages/base:$CIRCLE_SHA1-node" circleciimages/base:edge-node
+
+            echo "$DOCKER_PASS" | docker login --username "$DOCKER_USER" --password-stdin
+
+            docker push circleciimages/base:edge
+            docker push circleciimages/base:edge-node
 
   publish-monthly:
-    docker:
-      - image: docker:stable-git
+    executor:
+      name: orb-tools/machine
+      dlc: true
     steps:
       - checkout
-      - setup_remote_docker
+
       - run:
-          name: "Build Docker Image"
-          command: docker build --pull -t cibuilds/base:$CIRCLE_SHA1 .
+          name: Build Docker images
+          command: |
+            docker build --pull -t "cibuilds/base:$CIRCLE_SHA1" ubuntu
+            docker build --pull -t "cibuilds/base:$CIRCLE_SHA1-node" variant-node
+
       - run:
-          name: "Prepare & Publish Image"
+          name: Prepare and publish images
           command: |
             VERSION=$( date +%Y.%m )
-            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:latest
-            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:${VERSION}
+            docker tag "circleciimages/base:$CIRCLE_SHA1" "circleciimages/base:${VERSION}"
+            docker tag "circleciimages/base:$CIRCLE_SHA1-node" "circleciimages/base:${VERSION}-node"
 
             echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-            docker push cibuilds/base
+
+            docker push "circleciimages/base:${VERSION}"
+            docker push "circleciimages/base:${VERSION}-node"
 
 workflows:
   monthly-release:
