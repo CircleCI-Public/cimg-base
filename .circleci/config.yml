@@ -92,6 +92,10 @@ jobs:
           image: circleciimages/base
           tag: "$( date +%Y.%m )-node"
 
+dev_filters: &dev_filters
+  branches:
+    ignore: master
+
 master_filters: &master_filters
   branches:
     only: master
@@ -111,6 +115,7 @@ workflows:
     jobs:
       - edge:
           name: edge-test
+          filters: *dev_filters
 
       - edge:
           name: edge-test-publish
