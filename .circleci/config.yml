@@ -17,11 +17,13 @@ jobs:
       - checkout
 
       - docker/build:
+          dockerfile: ubuntu/Dockerfile
           path: ubuntu
           image: circleciimages/base
           tag: "$CIRCLE_SHA1"
 
       - docker/build:
+          dockerfile: variant-node/Dockerfile
           path: variant-node
           image: circleciimages/base
           tag: "$CIRCLE_SHA1-node"
@@ -56,12 +58,14 @@ jobs:
       - checkout
 
       - docker/build:
+          dockerfile: ubuntu/Dockerfile
           path: ubuntu
           image: circleciimages/base
           tag: "$CIRCLE_SHA1"
           extra_build_args: --pull
 
       - docker/build:
+          dockerfile: variant-node/Dockerfile
           path: variant-node
           image: circleciimages/base
           tag: "$CIRCLE_SHA1-node"
