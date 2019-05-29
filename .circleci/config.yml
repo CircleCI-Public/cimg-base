@@ -114,6 +114,6 @@ workflows:
 
       - edge:
           name: edge-test-publish
-          context: org-global
+          context: orb-publishing
           publish: true
           filters: *master_filters
