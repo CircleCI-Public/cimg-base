@@ -19,13 +19,13 @@ jobs:
       - docker/build:
           dockerfile: ubuntu/Dockerfile
           path: ubuntu
-          image: circleciimages/base
+          image: cimg/base
           tag: "$CIRCLE_SHA1"
 
       - docker/build:
           dockerfile: variant-node/Dockerfile
           path: variant-node
-          image: circleciimages/base
+          image: cimg/base
           tag: "$CIRCLE_SHA1-node"
 
       - when:
@@ -36,16 +36,16 @@ jobs:
             - run:
                 name: Tag images (edge)
                 command: |
-                  docker tag "circleciimages/base:$CIRCLE_SHA1" circleciimages/base:edge
+                  docker tag "cimg/base:$CIRCLE_SHA1" cimg/base:edge
 
-                  docker tag "circleciimages/base:$CIRCLE_SHA1-node" circleciimages/base:edge-node
+                  docker tag "cimg/base:$CIRCLE_SHA1-node" cimg/base:edge-node
 
             - docker/push:
-                image: circleciimages/base
+                image: cimg/base
                 tag: edge
 
             - docker/push:
-                image: circleciimages/base
+                image: cimg/base
                 tag: edge-node
 
   monthly:
@@ -58,14 +58,14 @@ jobs:
       - docker/build:
           dockerfile: ubuntu/Dockerfile
           path: ubuntu
-          image: circleciimages/base
+          image: cimg/base
           tag: "$CIRCLE_SHA1"
           extra_build_args: --pull
 
       - docker/build:
           dockerfile: variant-node/Dockerfile
           path: variant-node
-          image: circleciimages/base
+          image: cimg/base
           tag: "$CIRCLE_SHA1-node"
           extra_build_args: --pull
 
@@ -74,18 +74,18 @@ jobs:
           command: |
             VERSION=$( date +%Y.%m )
 
-            docker tag "circleciimages/base:$CIRCLE_SHA1" "circleciimages/base:${VERSION}"
+            docker tag "cimg/base:$CIRCLE_SHA1" "cimg/base:${VERSION}"
 
-            docker tag "circleciimages/base:$CIRCLE_SHA1-node" "circleciimages/base:${VERSION}-node"
+            docker tag "cimg/base:$CIRCLE_SHA1-node" "cimg/base:${VERSION}-node"
 
       - docker/check
 
       - docker/push:
-          image: circleciimages/base
+          image: cimg/base
           tag: "$( date +%Y.%m )"
 
       - docker/push:
-          image: circleciimages/base
+          image: cimg/base
           tag: "$( date +%Y.%m )-node"
 
 dev_filters: &dev_filters
