@@ -31,9 +31,7 @@ jobs:
       - when:
           condition: <<parameters.publish>>
           steps:
-            - docker/check:
-                docker-username: DOCKER_USER
-                docker-password: DOCKER_PASS
+            - docker/check
 
             - run:
                 name: Tag images (edge)
@@ -80,9 +78,7 @@ jobs:
 
             docker tag "circleciimages/base:$CIRCLE_SHA1-node" "circleciimages/base:${VERSION}-node"
 
-      - docker/check:
-          docker-username: DOCKER_USER
-          docker-password: DOCKER_PASS
+      - docker/check
 
       - docker/push:
           image: circleciimages/base
@@ -108,7 +104,7 @@ workflows:
           filters: *master_filters
     jobs:
       - monthly:
-          context: org-global
+          context: image-publishing
           filters: *master_filters
 
   main:
@@ -119,6 +115,6 @@ workflows:
 
       - edge:
           name: edge-test-publish
-          context: orb-publishing
+          context: image-publishing
           publish: true
           filters: *master_filters
