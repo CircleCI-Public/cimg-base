@@ -1,80 +1,119 @@
 version: 2.1
 
+orbs:
+  docker: circleci/docker@0.3.1
+
 jobs:
-  test:
-    docker:
-      - image: docker:stable-git
+  edge:
+    parameters:
+      publish:
+        type: boolean
+        default: false
+
+    executor:
+      name: docker/machine
+      docker-layer-caching: true
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: "Make sure Dockerfile Builds"
-          command: docker build -t cibuilds/base:$CIRCLE_SHA1 .
-      # We need to run the image and test the tools we pre-install here in the future
 
-  publish-edge:
-    docker:
-      - image: docker:stable-git
+      - docker/build:
+          dockerfile: ubuntu/Dockerfile
+          path: ubuntu
+          image: circleciimages/base
+          tag: "$CIRCLE_SHA1"
+
+      - docker/build:
+          dockerfile: variant-node/Dockerfile
+          path: variant-node
+          image: circleciimages/base
+          tag: "$CIRCLE_SHA1-node"
+
+      - when:
+          condition: <<parameters.publish>>
+          steps:
+            - docker/check:
+                docker-username: DOCKER_USER
+                docker-password: DOCKER_PASS
+
+            - run:
+                name: Tag images (edge)
+                command: |
+                  docker tag "circleciimages/base:$CIRCLE_SHA1" circleciimages/base:edge
+
+                  docker tag "circleciimages/base:$CIRCLE_SHA1-node" circleciimages/base:edge-node
+
+            - docker/push:
+                image: circleciimages/base
+                tag: edge
+
+            - docker/push:
+                image: circleciimages/base
+                tag: edge-node
+
+  monthly:
+    executor:
+      name: docker/machine
+      docker-layer-caching: true
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
-      - run:
-          name: "Build Docker Image"
-          command: docker build -t cibuilds/base:$CIRCLE_SHA1 .
-      - run:
-          name: "Prepare & Publish Image"
-          command: |
-            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:edge
 
-            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-            docker push cibuilds/base
+      - docker/build:
+          dockerfile: ubuntu/Dockerfile
+          path: ubuntu
+          image: circleciimages/base
+          tag: "$CIRCLE_SHA1"
+          extra_build_args: --pull
 
-  publish-monthly:
-    docker:
-      - image: docker:stable-git
-    steps:
-      - checkout
-      - setup_remote_docker
+      - docker/build:
+          dockerfile: variant-node/Dockerfile
+          path: variant-node
+          image: circleciimages/base
+          tag: "$CIRCLE_SHA1-node"
+          extra_build_args: --pull
+
       - run:
-          name: "Build Docker Image"
-          command: docker build --pull -t cibuilds/base:$CIRCLE_SHA1 .
-      - run:
-          name: "Prepare & Publish Image"
+          name: Tag images (monthly)
           command: |
             VERSION=$( date +%Y.%m )
-            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:latest
-            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:${VERSION}
 
-            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-            docker push cibuilds/base
+            docker tag "circleciimages/base:$CIRCLE_SHA1" "circleciimages/base:${VERSION}"
+
+            docker tag "circleciimages/base:$CIRCLE_SHA1-node" "circleciimages/base:${VERSION}-node"
+
+      - docker/check:
+          docker-username: DOCKER_USER
+          docker-password: DOCKER_PASS
+
+      - docker/push:
+          image: circleciimages/base
+          tag: "$( date +%Y.%m )"
+
+      - docker/push:
+          image: circleciimages/base
+          tag: "$( date +%Y.%m )-node"
+
+master_filters: &master_filters
+  branches:
+    only: master
 
 workflows:
   monthly-release:
     triggers:
       - schedule:
           cron: "0 0 2 * *"
-          filters:
-            branches:
-              only: master
+          filters: *master_filters
     jobs:
-      - test
-      - publish-monthly:
+      - monthly:
           context: org-global
-          requires:
-            - test
-          filters:
-            branches:
-              only: master
+          filters: *master_filters
 
   main:
     jobs:
-      - test
-      - publish-edge:
+      - edge:
+          name: edge-test
+
+      - edge:
+          name: edge-test-publish
           context: org-global
-          requires:
-            - test
-          filters:
-            branches:
-              only: master
+          publish: true
+          filters: *master_filters

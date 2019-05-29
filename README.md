@@ -1,4 +1,4 @@
-# CircleCI Docker Image `cimg/base` [![CircleCI Build Status](https://circleci.com/gh/cci-images/base.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/cci-imagess/base) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/cci-images/base/master/LICENSE)
+# CircleCI Docker Image `cimg/base` [![CircleCI Build Status](https://circleci.com/gh/cci-images/base.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/cci-imagess/base) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/cci-images/base/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/images)
 
 The CircleCI Docker Base Image (`cimg/base`) is a lightweight Docker image with the minimal set of tools necessary to run a build on CircleCI.
 
