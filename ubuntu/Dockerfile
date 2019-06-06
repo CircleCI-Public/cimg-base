@@ -1,6 +1,6 @@
 # vim:set ft=dockerfile:
 #
-# The Ubuntu-based CircleCI Docker Image. Only use Ubuntu Long-Term Support 
+# The Ubuntu-based CircleCI Docker Image. Only use Ubuntu Long-Term Support
 # (LTS) releases.
 FROM ubuntu:18.04
 
@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
 	jq \
 	# Need to figure out what this is
 	locales \
+	make \
 	# Do we actually want this?
 	mercurial \
 	net-tools \
