@@ -1,0 +1,4 @@
+file:
+  # ensure a Bash shell exists
+  /bin/bash:
+    exists: true

@@ -1,135 +1,89 @@
 version: 2.1
 
 orbs:
-  docker: circleci/docker@0.5.0
-  compare-url: iynere/compare-url@1.1.0
+  cimg: cci-dev/cimg@0.0.4
 
-jobs:
-  edge:
-    parameters:
-      publish:
-        type: boolean
-        default: false
-
-    executor:
-      name: docker/machine
-      docker-layer-caching: true
-
-    steps:
-      - checkout
-
-      - docker/build:
-          step-name: Build cimg/base
-          dockerfile: ubuntu/Dockerfile
-          path: ubuntu
-          image: cimg/base
-          tag: "$CIRCLE_SHA1"
-
-      - docker/build:
-          step-name: Build cimg/base:node
-          dockerfile: variant-node/Dockerfile
-          path: variant-node
-          image: cimg/base
-          tag: "$CIRCLE_SHA1-node"
-
-      - compare-url/reconstruct
-
-      - compare-url/use:
-          step-name: Check if
-
-      - when:
-          condition: <<parameters.publish>>
-          steps:
-            - docker/check
-
-            - run:
-                name: Tag images (edge)
-                command: |
-                  docker tag "cimg/base:$CIRCLE_SHA1" cimg/base:edge
-
-                  docker tag "cimg/base:$CIRCLE_SHA1-node" cimg/base:edge-node
-
-            - docker/push:
-                step-name: Push cimg/base:edge
-                image: cimg/base
-                tag: edge
-
-            - docker/push:
-                step-name: Push cimg/base:edge-node
-                image: cimg/base
-                tag: edge-node
-
-  monthly:
-    executor:
-      name: docker/machine
-      docker-layer-caching: true
-    steps:
-      - checkout
-
-      - docker/build:
-          step-name: Build cimg/base
-          dockerfile: ubuntu/Dockerfile
-          path: ubuntu
-          image: cimg/base
-          tag: "$CIRCLE_SHA1"
-          extra_build_args: --pull
-
-      - docker/build:
-          step-name: Build cimg/base:node
-          dockerfile: variant-node/Dockerfile
-          path: variant-node
-          image: cimg/base
-          tag: "$CIRCLE_SHA1-node"
-          extra_build_args: --pull
-
-      - run:
-          name: Tag images (monthly)
-          command: |
-            VERSION=$( date +%Y.%m )
-
-            docker tag "cimg/base:$CIRCLE_SHA1" "cimg/base:${VERSION}"
-
-            docker tag "cimg/base:$CIRCLE_SHA1-node" "cimg/base:${VERSION}-node"
-
-      - docker/check
-
-      - docker/push:
-          step-name: Push cimg/base:year.month
-          image: cimg/base
-          tag: "$( date +%Y.%m )"
-
-      - docker/push:
-          step-name: Push cimg/base:year.month-node
-          image: cimg/base
-          tag: "$( date +%Y.%m )-node"
-
-dev_filters: &dev_filters
+dev-filters: &dev-filters
   branches:
     ignore: master
 
-master_filters: &master_filters
+master-filters: &master-filters
   branches:
     only: master
 
 workflows:
-  cron-monthly:
+  monthly-cron:
     triggers:
       - schedule:
           cron: "0 0 2 * *"
-          filters: *master_filters
+          filters: *master-filters
     jobs:
-      - monthly:
+      - cimg/build-test-deploy:
+          name: build-test-deploy-monthly-cron
           context: image-publishing
-          filters: *master_filters
+          dockerfile-path: ubuntu
+          image-name: cimg/base
+          image-tag: "$CIRCLE_SHA1"
+          extra-build-args: --pull
+          goss-yaml-dir-path: ubuntu
+          deploy: true
+          publish-tag: "$( date +%Y.%m )"
+          filters: *master-filters
+
+      - cimg/build-test-deploy:
+          name: build-test-deploy-monthly-cron-node
+          context: image-publishing
+          dockerfile-path: variant-node
+          image-name: cimg/base
+          image-tag: "$CIRCLE_SHA1-node"
+          extra-build-args: --pull
+          goss-yaml-dir-path: variant-node
+          deploy: true
+          publish-tag: "$( date +%Y.%m )-node"
+          filters: *master-filters
 
   commit-edge:
     jobs:
-      - edge:
-          name: edge-test
-          filters: *dev_filters
+      # triggered by non-master branch commits
+      - cimg/build-test-deploy:
+          name: build-test-deploy-commit-edge-dev
+          dockerfile-path: ubuntu
+          image-name: cimg/base
+          image-tag: "$CIRCLE_SHA1"
+          extra-build-args: --pull
+          goss-yaml-dir-path: ubuntu
+          filters: *dev-filters
 
-      - edge:
-          name: edge-test-publish
+      - cimg/build-test-deploy:
+          name: build-test-deploy-commit-edge-dev-node
+          dockerfile-path: variant-node
+          image-name: cimg/base
+          image-tag: "$CIRCLE_SHA1-node"
+          extra-build-args: --pull
+          goss-yaml-dir-path: variant-node
+          filters: *dev-filters
+
+      # triggered by master branch commits
+      - cimg/build-test-deploy:
+          name: build-test-deploy-commit-edge-master
           context: image-publishing
-          publish: true
-          filters: *master_filters
+          dockerfile-path: ubuntu
+          image-name: cimg/base
+          image-tag: "$CIRCLE_SHA1"
+          extra-build-args: --pull
+          goss-yaml-dir-path: ubuntu
+          deploy: true
+          publish-tag: edge
+          filters: *master-filters
+
+      - cimg/build-test-deploy:
+          name: build-test-deploy-commit-edge-master-node
+          context: image-publishing
+          dockerfile-path: variant-node
+          image-name: cimg/base
+          image-tag: "$CIRCLE_SHA1-node"
+          extra-build-args: --pull
+          goss-yaml-dir-path: variant-node
+          deploy: true
+          publish-tag: edge-node
+          filters: *master-filters
