@@ -10,6 +10,7 @@ LABEL maintainer="CircleCI <support@circleci.com>"
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN apt-get update && apt-get install -y \
+	build-essential \
 	bzip2 \
 	ca-certificates \
 	curl \
