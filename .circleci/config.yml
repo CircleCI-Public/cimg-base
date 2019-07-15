@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  cimg: cci-dev/cimg@0.0.5
+  cimg: cci-dev/cimg@0.0.6
 
 dev-filters: &dev-filters
   branches:
