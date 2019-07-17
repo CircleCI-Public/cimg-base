@@ -45,7 +45,7 @@ RUN set -ex \
       https://api.github.com/repos/docker/cli/tags | \
       jq --argjson index "$INDEX" '.[$index].name') \
       # Filter out betas & release candidates
-      if [[ $(echo "$INDEX_VERSION" | grep -v beta | grep -v rc) ]]; then; \
+      && if [[ $(echo "$INDEX_VERSION" | grep -v beta | grep -v rc) ]]; then; \
         DOCKER_VERSION="${INDEX_VERSION:1:$((${#INDEX_VERSION} - 1 - 1))}" \
         && break; \
       else; \
