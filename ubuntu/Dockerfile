@@ -36,7 +36,7 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Docker
-RUN set -ex \
+RUN set -exo pipefail \
 	# Determine latest stable Docker version
   && declare -i INDEX=0 \
   && while true; \
