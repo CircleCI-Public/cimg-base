@@ -8,7 +8,7 @@ FROM ubuntu:%%BASE_VERSION%%
 LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
 # Change default shell to Bash
-SHELL /bin/bash
+SHELL ["/bin/bash"]
 
 # Install utilities
 RUN apt-get update && apt-get install -y \

@@ -1,7 +1,7 @@
 # The Node.js variant of the base image.
-FROM circleciimages/base
+FROM cimg/base
 
-LABEL maintainer="CircleCI <support@circleci.com>"
+LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
 ENV NVM_VERSION 0.34.0
 
@@ -16,6 +16,3 @@ ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 #RUN source $NVM_DIR/nvm.sh && nvm install --lts
 #RUN source $NVM_DIR/nvm.sh && nvm install --lts
-
-# This matches the default CircleCI working directory.
-WORKDIR /root/project

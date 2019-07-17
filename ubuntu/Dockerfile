@@ -4,10 +4,10 @@
 # (LTS) releases.
 FROM ubuntu:18.04
 
-LABEL maintainer="CircleCI <support@circleci.com>"
+LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
 # Change default shell to Bash
-SHELL /bin/bash
+SHELL ["/bin/bash"]
 
 RUN apt-get update && apt-get install -y \
 	bzip2 \
