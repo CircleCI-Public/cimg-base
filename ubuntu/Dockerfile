@@ -39,7 +39,7 @@ RUN apt-get update \
 RUN set -ex \
 	# Determine latest stable Docker version
   && declare -i INDEX=0 \
-  && while :; \
+  && while true; \
   	do; \
   		INDEX_VERSION=$(curl --show-error --location --fail --retry 3 \
       https://api.github.com/repos/docker/cli/tags | \
