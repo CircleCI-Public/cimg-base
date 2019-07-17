@@ -16,12 +16,12 @@ RUN apt-get update && apt-get install -y \
 	bzip2 \
 	ca-certificates \
 	curl \
-	xvfb \
 	git \
 	gnupg \
 	gzip \
 	jq \
 	locales \
+	make \
 	mercurial \
 	net-tools \
 	netcat \
@@ -30,6 +30,7 @@ RUN apt-get update && apt-get install -y \
 	tar \
 	unzip \
 	wget \
+	xvfb \
 	zip && \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
