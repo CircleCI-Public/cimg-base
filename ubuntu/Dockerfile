@@ -6,8 +6,8 @@ FROM ubuntu:18.04
 
 LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
-# Change default shell to Bash
-SHELL ["/bin/bash", "-c"]
+# Change default shell
+SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
 # Install utilities
 RUN apt-get update \
@@ -36,9 +36,8 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 # Install Docker
-RUN set -exo pipefail \
-	# Determine latest stable Docker version
-  && declare -i INDEX=0 \
+RUN declare -i INDEX=0 \
+  # Determine latest stable Docker version
   && while true; \
   	do INDEX_VERSION=$(curl --show-error --location --fail --retry 3 \
       https://api.github.com/repos/docker/cli/tags | \
@@ -67,3 +66,5 @@ RUN set -exo pipefail \
   && docker --version | grep "$DOCKER_VERSION_NUMBER"
 
 # Missing Docker Compose, dockerize, and the CircleCI CLI
+
+SHELL ["/bin/bash", "-c"]

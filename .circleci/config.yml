@@ -43,7 +43,7 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-monthly
-          dockerfile: ubuntu/Dockerfile
+          dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
 
@@ -80,7 +80,7 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-edge-dev
-          dockerfile: ubuntu/Dockerfile
+          dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *dev-filters
 
@@ -117,7 +117,7 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-edge-master
-          dockerfile: ubuntu/Dockerfile
+          dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
 
