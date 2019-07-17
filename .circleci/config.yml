@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  cimg: cci-dev/cimg@0.0.7
+  cimg: cci-dev/cimg@0.0.8
   docker: circleci/docker@0.5.9
 
 dev-filters: &dev-filters
