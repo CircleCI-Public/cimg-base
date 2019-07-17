@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install -y \
 	bzip2 \
 	ca-certificates \
 	curl \
-	xvfb \
 	git \
 	gnupg \
 	gzip \
@@ -28,7 +27,9 @@ RUN apt-get update && apt-get install -y \
 	tar \
 	unzip \
 	wget \
-	zip && \
-	apt-get clean && \
-	rm -rf /var/lib/apt/lists/*
+	xvfb \
+	zip
+#	&& \
+#		apt-get clean && \
+#		rm -rf /var/lib/apt/lists/*
 # Missing Docker, Docker Compose, dockerize, and the CircleCI CLI
