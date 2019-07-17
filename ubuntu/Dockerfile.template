@@ -8,7 +8,7 @@ FROM ubuntu:%%BASE_VERSION%%
 LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
 # Change default shell to Bash
-SHELL ["/bin/bash"]
+SHELL ["/bin/bash", "-c"]
 
 # Install utilities
 RUN apt-get update && apt-get install -y \
@@ -35,13 +35,14 @@ RUN apt-get update && apt-get install -y \
 	apt-get clean && \
 	rm -rf /var/lib/apt/lists/*
 
+SHELL ["/bin/bash", "-o", "pipefail"]
+
 # Install Docker
 RUN set -ex \
 	# Determine latest stable Docker version
   && declare -i INDEX=0 \
   && while true; \
-  	do; \
-  		INDEX_VERSION=$(curl --show-error --location --fail --retry 3 \
+  	do; INDEX_VERSION=$(curl --show-error --location --fail --retry 3 \
       https://api.github.com/repos/docker/cli/tags | \
       jq --argjson index "$INDEX" '.[$index].name') \
       # Filter out betas & release candidates
@@ -49,7 +50,7 @@ RUN set -ex \
         DOCKER_VERSION="${INDEX_VERSION:1:$((${#INDEX_VERSION} - 1 - 1))}" \
         && break; \
       else; \
-        INDEX=INDEX+1; \
+        INDEX=$((INDEX + 1)); \
       fi; \
     done \
   && DOCKER_VERSION_NUMBER="${DOCKER_VERSION:1}" \
@@ -60,12 +61,12 @@ RUN set -ex \
   && tar xf docker.tgz && rm -f docker.tgz \
   # Install Docker binaries
   && BINARIES=$(ls docker) && mv docker/* /usr/bin && rm -rf docker \
-  && for binary in "$BINARIES"; \
+  && for binary in $BINARIES; \
     do; \
       chmod +x "/usr/bin/$binary"; \
     done \
   # Verify installation
-  && which docker \
+  && command -v docker \
   && docker --version | grep "$DOCKER_VERSION_NUMBER"
 
 # Missing Docker Compose, dockerize, and the CircleCI CLI
