@@ -35,8 +35,6 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/*
 
-SHELL ["/bin/bash", "-c", "-o", "pipefail"]
-
 # Install Docker
 RUN set -ex \
 	# Determine latest stable Docker version
