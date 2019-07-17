@@ -1,7 +1,8 @@
 version: 2.1
 
 orbs:
-  cimg: cci-dev/cimg@0.0.6
+  cimg: cci-dev/cimg@0.0.7
+  docker: circleci/docker@0.5.9
 
 dev-filters: &dev-filters
   branches:
@@ -18,8 +19,13 @@ workflows:
           cron: "0 0 2 * *"
           filters: *master-filters
     jobs:
+      - docker/hadolint:
+          name: lint-ubuntu-monthly
+          dockerfile: ubuntu/Dockerfile
+          filters: *master-filters
+
       - cimg/build-test-deploy:
-          name: build-test-deploy-monthly-cron
+          name: ubuntu-monthly
           context: image-publishing
           dockerfile-path: ubuntu
           image-name: cimg/base
@@ -29,9 +35,15 @@ workflows:
           deploy: true
           publish-tag: "$( date +%Y.%m )"
           filters: *master-filters
+          requires: [lint-ubuntu-monthly]
+
+      - docker/hadolint:
+          name: lint-node-monthly
+          dockerfile: ubuntu/Dockerfile
+          filters: *master-filters
 
       - cimg/build-test-deploy:
-          name: build-test-deploy-monthly-cron-node
+          name: node-monthly
           context: image-publishing
           dockerfile-path: variant-node
           image-name: cimg/base
@@ -41,31 +53,49 @@ workflows:
           deploy: true
           publish-tag: "$( date +%Y.%m )-node"
           filters: *master-filters
+          requires: [lint-node-monthly]
 
-  commit-edge:
+  commit-edge-dev:
     jobs:
-      # triggered by non-master branch commits
+      - docker/hadolint:
+          name: lint-ubuntu-edge-dev
+          dockerfile: ubuntu/Dockerfile
+          filters: *dev-filters
+
       - cimg/build-test-deploy:
-          name: build-test-deploy-commit-edge-dev
+          name: ubuntu-edge-dev
           dockerfile-path: ubuntu
           image-name: cimg/base
           image-tag: "${CIRCLE_SHA1:0:7}"
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
           filters: *dev-filters
+          requires: [lint-ubuntu-edge-dev]
+
+      - docker/hadolint:
+          name: lint-node-edge-dev
+          dockerfile: ubuntu/Dockerfile
+          filters: *dev-filters
 
       - cimg/build-test-deploy:
-          name: build-test-deploy-commit-edge-dev-node
+          name: node-edge-dev
           dockerfile-path: variant-node
           image-name: cimg/base
           image-tag: "${CIRCLE_SHA1:0:7}-node"
           extra-build-args: --pull
           goss-yaml-dir-path: variant-node
           filters: *dev-filters
+          requires: [lint-node-edge-dev]
 
-      # triggered by master branch commits
+  commit-edge-master:
+    jobs:
+      - docker/hadolint:
+          name: lint-ubuntu-edge-master
+          dockerfile: ubuntu/Dockerfile
+          filters: *master-filters
+
       - cimg/build-test-deploy:
-          name: build-test-deploy-commit-edge-master
+          name: ubuntu-edge-master
           context: image-publishing
           dockerfile-path: ubuntu
           image-name: cimg/base
@@ -75,9 +105,15 @@ workflows:
           deploy: true
           publish-tag: edge
           filters: *master-filters
+          requires: [lint-ubuntu-edge-master]
+
+      - docker/hadolint:
+          name: lint-node-edge-master
+          dockerfile: ubuntu/Dockerfile
+          filters: *master-filters
 
       - cimg/build-test-deploy:
-          name: build-test-deploy-commit-edge-master-node
+          name: node-edge-master
           context: image-publishing
           dockerfile-path: variant-node
           image-name: cimg/base
@@ -87,3 +123,4 @@ workflows:
           deploy: true
           publish-tag: edge-node
           filters: *master-filters
+          requires: [lint-node-edge-master]
