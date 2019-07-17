@@ -13,7 +13,7 @@ master-filters: &master-filters
     only: master
 
 lint-ignore-rules: &lint-ignore-rules
-  DL3008,DL3015
+  DL3008,DL3015,DL3009 # << remove this last one after debugging
 
 workflows:
   monthly-cron:
