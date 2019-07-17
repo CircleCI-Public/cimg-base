@@ -12,6 +12,9 @@ master-filters: &master-filters
   branches:
     only: master
 
+lint-ignore-rules: &lint-ignore-rules
+  DL3008,DL3015
+
 workflows:
   monthly-cron:
     triggers:
@@ -22,6 +25,7 @@ workflows:
       - docker/hadolint:
           name: lint-ubuntu-monthly
           dockerfile: ubuntu/Dockerfile
+          ignore-rules: *lint-ignore-rules
           filters: *master-filters
 
       - cimg/build-test-deploy:
@@ -40,6 +44,7 @@ workflows:
       - docker/hadolint:
           name: lint-node-monthly
           dockerfile: ubuntu/Dockerfile
+          ignore-rules: *lint-ignore-rules
           filters: *master-filters
 
       - cimg/build-test-deploy:
@@ -60,6 +65,7 @@ workflows:
       - docker/hadolint:
           name: lint-ubuntu-edge-dev
           dockerfile: ubuntu/Dockerfile
+          ignore-rules: *lint-ignore-rules
           filters: *dev-filters
 
       - cimg/build-test-deploy:
@@ -75,6 +81,7 @@ workflows:
       - docker/hadolint:
           name: lint-node-edge-dev
           dockerfile: ubuntu/Dockerfile
+          ignore-rules: *lint-ignore-rules
           filters: *dev-filters
 
       - cimg/build-test-deploy:
@@ -92,6 +99,7 @@ workflows:
       - docker/hadolint:
           name: lint-ubuntu-edge-master
           dockerfile: ubuntu/Dockerfile
+          ignore-rules: *lint-ignore-rules
           filters: *master-filters
 
       - cimg/build-test-deploy:
@@ -110,6 +118,7 @@ workflows:
       - docker/hadolint:
           name: lint-node-edge-master
           dockerfile: ubuntu/Dockerfile
+          ignore-rules: *lint-ignore-rules
           filters: *master-filters
 
       - cimg/build-test-deploy:

@@ -7,8 +7,8 @@ FROM ubuntu:%%BASE_VERSION%%
 
 LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
-# Change default shell from Dash to Bash
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+# Change default shell to Bash
+SHELL /bin/bash
 
 # Install utilities
 RUN apt-get update && apt-get install -y \
@@ -30,25 +30,8 @@ RUN apt-get update && apt-get install -y \
 	tar \
 	unzip \
 	wget \
-	zip
+	zip && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
 
-# Install Docker
-RUN declare -i INDEX=0 \
-  while : \
-  do \
-    INDEX_VERSION=$(curl --silent --show-error --location --fail --retry 3 \
-      https://api.github.com/repos/docker/cli/tags | \
-      jq --argjson index "$INDEX" '.[$index].name') \
-    if [[ $(echo "$INDEX_VERSION" | grep -v beta | grep -v rc) ]]; then \
-      DOCKER_VERSION="${INDEX_VERSION:1:$((${#INDEX_VERSION} - 1 - 1))}" \
-      break \
-    else \
-      INDEX=INDEX+1 \
-    fi \
-  done
-
-# Install docker-compose
-
-# Install dockerize
-
-# Install CircleCI CLI
+# Missing Docker, Docker Compose, dockerize, and the CircleCI CLI
