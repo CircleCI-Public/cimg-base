@@ -40,14 +40,14 @@ RUN set -ex \
 	# Determine latest stable Docker version
   && declare -i INDEX=0 \
   && while true; \
-  	do; INDEX_VERSION=$(curl --show-error --location --fail --retry 3 \
+  	do INDEX_VERSION=$(curl --show-error --location --fail --retry 3 \
       https://api.github.com/repos/docker/cli/tags | \
       jq --argjson index "$INDEX" '.[$index].name') \
-      # Filter out betas & release candidates
-      && if [[ $(echo "$INDEX_VERSION" | grep -v beta | grep -v rc) ]]; then; \
+  		# Filter out betas & release candidates
+      && if [[ $(echo "$INDEX_VERSION" | grep -v beta | grep -v rc) ]]; then \
         DOCKER_VERSION="${INDEX_VERSION:1:$((${#INDEX_VERSION} - 1 - 1))}" \
         && break; \
-      else; \
+      else \
         INDEX=$((INDEX + 1)); \
       fi; \
     done \
@@ -60,8 +60,7 @@ RUN set -ex \
   # Install Docker binaries
   && BINARIES=$(ls docker) && mv docker/* /usr/bin && rm -rf docker \
   && for binary in $BINARIES; \
-    do; \
-      chmod +x "/usr/bin/$binary"; \
+    do chmod +x "/usr/bin/$binary"; \
     done \
   # Verify installation
   && command -v docker \
