@@ -135,9 +135,9 @@ RUN CIRCLECI_CLI_VERSION=$(curl --show-error --location --fail --retry 3 \
   jq '.tag_name' | sed -E 's/"//g') \
   # extract latest version from GitHub releases API
   && curl -fLSs https://circle.ci/cli | bash \
-  # verify version
+  # verify install; strip leading `v` from $CIRCLECI_CLI_VERSION
   && command -v circleci \
-  && circleci --skip-update-check version | grep "$CIRCLECI_CLI_VERSION"
+  && circleci --skip-update-check version | grep "${CIRCLECI_CLI_VERSION:1}"
 
 # Set default shell for users
 SHELL ["/bin/bash", "-c"]
