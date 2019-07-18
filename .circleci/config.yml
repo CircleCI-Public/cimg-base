@@ -13,7 +13,7 @@ master-filters: &master-filters
     only: master
 
 lint-ignore-rules: &lint-ignore-rules
-  DL3008,DL3015,SC2143,SC2039,SC1090,DL3006 # remove DL3006 later, it's a good one
+  DL3006,DL3008,DL3015,SC1090,SC2039,SC2143 # remove DL3006 later, it's a good one
 
 workflows:
   monthly-cron:
@@ -120,6 +120,7 @@ workflows:
           dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
+          requires: [ubuntu-edge-master]
 
       - cimg/build-test-deploy:
           name: node-edge-master
