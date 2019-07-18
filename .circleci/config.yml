@@ -63,10 +63,10 @@ workflows:
 
       - cimg/build-test-deploy:
           name: node-monthly
+          context: image-publishing
           checkout: false
           attach-workspace: true
           workspace-root: ~/
-          context: image-publishing
           dockerfile-path: variant-node
           image-name: cimg/base
           image-tag: "$( date +%Y.%m )-node"
@@ -87,6 +87,7 @@ workflows:
 
       - cimg/build-test-deploy:
           name: ubuntu-edge-dev
+          context: image-publishing
           dockerfile-path: ubuntu
           image-name: ccitest/base
           image-tag: "$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}"
@@ -119,6 +120,7 @@ workflows:
 
       - cimg/build-test-deploy:
           name: node-edge-dev
+          context: image-publishing
           checkout: false
           attach-workspace: true
           workspace-root: ~/
@@ -175,10 +177,10 @@ workflows:
 
       - cimg/build-test-deploy:
           name: node-edge-master
+          context: image-publishing
           checkout: false
           attach-workspace: true
           workspace-root: ~/
-          context: image-publishing
           dockerfile-path: variant-node
           image-name: cimg/base
           image-tag: edge-node
