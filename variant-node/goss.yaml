@@ -1,10 +1,6 @@
 file:
   /bin/bash:
     exists: true
-  /usr/bin/docker-compose:
-    exists: true
-  /usr/bin/dockerize:
-    exists: true
 
 command:
   bash:
@@ -13,10 +9,21 @@ command:
     exit-status: 0
   docker:
     exit-status: 0
+  docker-compose:
+    exit-status: 0
+    exec: "docker-compose --version"
+  dockerize:
+    exit-status: 0
+    exec: "dockerize --version"
   node:
     exit-status: 0
+    exec: "node --version"
+  npm:
+    exit-status: 0
+    exec: "npm install test-npm-install"
   nvm:
     exit-status: 0
+    exec: "nvm use --lts"
 
 package:
   build-essential:
