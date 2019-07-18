@@ -1,6 +1,10 @@
 file:
   /bin/bash:
     exists: true
+  /usr/bin/docker-compose:
+    exists: true
+  /usr/bin/dockerize:
+    exists: true
 
 command:
   bash:
@@ -8,10 +12,6 @@ command:
   circleci:
     exit-status: 0
   docker:
-    exit-status: 0
-  docker-compose:
-    exit-status: 0
-  dockerize:
     exit-status: 0
 
 package:
