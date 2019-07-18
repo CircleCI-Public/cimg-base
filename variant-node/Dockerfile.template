@@ -23,8 +23,7 @@ RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
 	&& nvm --version | grep "${NVM_VERSION:1}" \
 	&& nvm install --lts \
 	# set Node LTS release as default
-	&& nvm alias default --lts \
-	&& nvm use default
+	&& nvm use --lts
 
 # Add Node, NPM, NVM to path so the commands are available
 ENV NVM_DIR "$HOME/.nvm"
