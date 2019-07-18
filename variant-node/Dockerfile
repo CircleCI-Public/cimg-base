@@ -12,14 +12,11 @@ RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
   jq '.tag_name' | sed -E 's/"//g') \
   # extract latest version from GitHub releases API
   && curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash \
-	&& source ~/.nvm/nvm.sh && nvm install --lts \
-	&& export NVM_VERSION
+	&& source ~/.nvm/nvm.sh && \
+	&& nvm --version | grep "$NVM_VERSION" \
+	&& nvm install --lts
 
 ENV NVM_DIR $HOME/.nvm
-
-# Verify NVM
-RUN command -v nvm \
-	&& nvm --version | grep "$NVM_VERSION"
 
 # Add node and npm to path so the commands are available
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
