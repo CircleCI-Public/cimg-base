@@ -96,6 +96,7 @@ workflows:
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
           deploy: true
+          publish-tags: latest
           filters: *dev-filters
           requires: [lint-ubuntu-edge-dev]
           post-steps:
