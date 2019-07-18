@@ -1,21 +1,27 @@
 # The Node.js variant of the base image.
-FROM circleciimages/base
+FROM cimg/base
 
-LABEL maintainer="CircleCI <support@circleci.com>"
+LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
-ENV NVM_VERSION 0.34.0
+# Set default shell for building image
+SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v${NVM_VERSION}/install.sh | bash \
-	&& source ~/.nvm/nvm.sh && nvm install --lts
+# Install NVM
+RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
+  https://api.github.com/repos//nvm-sh/nvm/releases/latest | \
+  jq '.tag_name' | sed -E 's/"//g') \
+  # extract latest version from GitHub releases API
+  && curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash \
+	&& source ~/.nvm/nvm.sh && nvm install --lts \
+	# verify version
+	&& command -v nvm \
+	&& nvm --version | grep "$NVM_VERSION"
 
 ENV NVM_DIR $HOME/.nvm
 
-# add node and npm to path so the commands are available
+# Add node and npm to path so the commands are available
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
-#RUN source $NVM_DIR/nvm.sh && nvm install --lts
-#RUN source $NVM_DIR/nvm.sh && nvm install --lts
-
-# This matches the default CircleCI working directory.
-WORKDIR /root/project
+# Set default shell for users
+SHELL ["/bin/bash", "-c"]
