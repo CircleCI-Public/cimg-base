@@ -12,10 +12,11 @@ RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
   jq '.tag_name' | sed -E 's/"//g') \
   # extract latest version from GitHub releases API
   && curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash \
-	&& source ~/.nvm/nvm.sh && nvm install --lts \
+	&& source ~/.nvm/nvm.sh && nvm install --lts
+	# \
 	# verify version
-	&& command -v nvm \
-	&& nvm --version | grep "$NVM_VERSION"
+	#&& command -v nvm \
+	#&& nvm --version | grep "$NVM_VERSION"
 
 ENV NVM_DIR $HOME/.nvm
 
