@@ -6,7 +6,7 @@ FROM ubuntu:18.04
 
 LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
-# Change default shell
+# Set default shell for building image
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
 # Install utilities
@@ -129,6 +129,15 @@ RUN DOCKERIZE_VERSION=$(curl --show-error --location --fail --retry 3 \
   && command -v dockerize \
   && dockerize --version | grep "$DOCKERIZE_VERSION"
 
-# Missing the CircleCI CLI
+# Install CircleCI CLI
+RUN CIRCLECI_CLI_VERSION=$(curl --show-error --location --fail --retry 3 \
+  https://api.github.com/repos/CircleCI-Public/circleci-cli/releases/latest | \
+  jq '.tag_name' | sed -E 's/"//g') \
+  # extract latest version from GitHub releases API
+  && curl -fLSs https://circle.ci/cli | bash \
+  # verify version
+  && command -v circleci \
+  && circleci --skip-update-check version | grep "$CIRCLECI_CLI_VERSION"
 
+# Set default shell for users
 SHELL ["/bin/bash", "-c"]
