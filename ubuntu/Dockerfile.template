@@ -81,7 +81,6 @@ RUN declare -i INDEX=0 \
       fi; \
     done \
   && DOCKER_COMPOSE_BINARY_URL="https://github.com/docker/compose/releases/download/$DOCKER_COMPOSE_VERSION/docker-compose-Linux-x86_64" \
-  && DOCKER_COMPOSE_SHASUM_URL="$DOCKER_COMPOSE_BINARY_URL.sha256" \
   # Download binary and shasum
   && curl -O --show-error --location --fail --retry 3 \
     "$DOCKER_COMPOSE_BINARY_URL" \
@@ -90,17 +89,17 @@ RUN declare -i INDEX=0 \
     "https://api.github.com/repos/docker/compose/releases/tags/$DOCKER_COMPOSE_VERSION" | \
     jq '.body') \
   # Work around malformed shasum files
-  && if [[ $(echo $DOCKER_COMPOSE_RELEASE_BODY | \
+  && if [[ $(echo "$DOCKER_COMPOSE_RELEASE_BODY" | \
     grep -o -e "\`................................................................\` | \`docker-compose-Linux-x86_64") ]]; then \
-      SHASUM_STRING=$(echo $DOCKER_COMPOSE_RELEASE_BODY | \
+      SHASUM_STRING=$(echo "$DOCKER_COMPOSE_RELEASE_BODY" | \
       grep -o -e "\`................................................................\` | \`docker-compose-Linux-x86_64" | \
       sed -E 's/`|\|//g'); \
-    elif [[ $(echo $DOCKER_COMPOSE_RELEASE_BODY | \
+    elif [[ $(echo "$DOCKER_COMPOSE_RELEASE_BODY" | \
       grep -o -e "\`docker-compose-Linux-x86_64\` | \`................................................................") ]]; then \
-      SHASUM_STRING=$(echo $DOCKER_COMPOSE_RELEASE_BODY | \
+      SHASUM_STRING=$(echo "$DOCKER_COMPOSE_RELEASE_BODY" | \
       grep -o -e "\`docker-compose-Linux-x86_64\` | \`................................................................" | \
       sed -E 's/`|\|//g'); \
-    fi; \
+    fi \
   && SHASUM=$(echo "$SHASUM_STRING" | sed -E "s/docker-compose-Linux-x86_64| //g") \
   # Verify shasum
   && echo "$SHASUM  docker-compose-Linux-x86_64" | sha256sum -c \
@@ -111,6 +110,6 @@ RUN declare -i INDEX=0 \
   && command -v docker-compose \
   && docker-compose --version | grep "$DOCKER_COMPOSE_VERSION"
 
-# Missing dockerize, and the CircleCI CLI
+# Missing dockerize and the CircleCI CLI
 
 SHELL ["/bin/bash", "-c"]
