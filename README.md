@@ -27,7 +27,7 @@ Mutable tags representing the most recent monthly release of this image and its 
 Mutable tags representing the builds of this image and its Node variant following the most recent successful commit to this repository's `master` branch.
 
 ### `latest`
-Mutable tag that is functionally a duplicate of the Non-Node-variant, vanilla `cimg/base:edge` image. Anyone calling the `cimg/base` image without specifying a tag will get this version of the image.
+Mutable tag that represents the latest non-Node-variant, vanilla `cimg/base` image, functionally duplicating whichever is the more recent of the `edge` and `stable` tags. Anyone calling the `cimg/base` image without specifying a tag will get this version of the image.
 
 ## Resources
 
