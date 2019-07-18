@@ -97,6 +97,7 @@ workflows:
           image-tag: "$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}"
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
+          test-suite-name: ubuntu
           deploy: true
           publish-tags: latest
           filters: *dev-filters
@@ -135,6 +136,7 @@ workflows:
           image-tag: "$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}-node"
           extra-build-args: --pull
           goss-yaml-dir-path: variant-node
+          test-suite-name: variant-node
           deploy: true
           filters: *dev-filters
           requires: [lint-node-edge-dev]
@@ -155,6 +157,7 @@ workflows:
           image-tag: edge
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
+          test-suite-name: ubuntu
           deploy: true
           publish-tags: latest
           filters: *master-filters
@@ -193,6 +196,7 @@ workflows:
           image-tag: edge-node
           extra-build-args: --pull
           goss-yaml-dir-path: variant-node
+          test-suite-name: variant-node
           deploy: true
           filters: *master-filters
           requires: [lint-node-edge-master]
