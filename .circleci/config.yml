@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   bt: circleci/build-tools@2.6.3
-  cimg: cci-dev/cimg@0.0.11
+  cimg: cci-dev/cimg@0.0.12
   docker: circleci/docker@0.5.10
 
 dev-filters: &dev-filters
