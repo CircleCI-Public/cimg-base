@@ -17,15 +17,17 @@ You can also use this image directly in CircleCI if you need a light-weight imag
 
 ## Tags
 
-`:<year>.<month>` - The monthly release for this image.
-Any new or removed tools from the base image in the last 31 days will be reflected during this image release.
-For example, the `2019.04` image will include any changes to this repo/image that occurred from March 1 - 31st, 2019.
-Monthly releases are built on the 2nd of every month.
+### `<year>.<month>`, `<year>.<month>-node`
+Mostly immutable (except in the case of CVEs or severe bugs) monthly release tags for this image and its Node variant. Any new or removed tools from the base image in the last month will be reflected in this image release. For example, the `2019.04`/`2019.04-node` tags will include any changes to this repo/image that occurred in March 2019. Monthly releases are built on the 2nd of every month.
 
-`:stable` - An alias for the most recent monthly release.
-For example, if today's date was April 15th, 2019, then the `:stable` tag would be an alias for the `:2019.04` tag.
+### `stable`, `stable-node`
+Mutable tags representing the most recent monthly release of this image and its Node variant. For example, if today's date was April 15th, 2019, then the `stable`/`stable-node` tags would be aliases for the `2019.04`/`2019.04-node` tags.
 
-`:edge` - The latest changes to this Docker image that's available in the `master` branch of this repo.
+### `edge`, `edge-node`
+Mutable tags representing the builds of this image and its Node variant following the most recent successful commit to this repository's `master` branch.
+
+### `latest`
+Mutable tag that is functionally a duplicate of the Non-Node-variant, vanilla `cimg/base:edge` image. Anyone calling the `cimg/base` image without specifying a tag will get this version of the image.
 
 ## Resources
 
@@ -36,13 +38,13 @@ For example, if today's date was April 15th, 2019, then the `:stable` tag would 
 
 Working on CircleCI Docker Images.
 
+### Commits to non-master branches
+Upon successful commits to non-master branches of this repository, this image and its Node variant will be pushed to `ccitest/base` for any requisite post-deployment testing. Tags there will represent the branch and commit hash that triggered them. For example, a successful commit to a branch of this repository called `dev` would result in the creation of the following image/tag: `ccitest/base:dev-${CIRCLE_SHA1:0:7}"`, where `${CIRCLE_SHA1:0:7}"` represents the first six characters of that particular commit hash.
+
+### Patching bugs and vulnerabilities
+Monthly release tags can be manually re-published to patch vulnerabilities or severe bugs via a pushing a `git` tag matching the desired Docker tag.
+
 ### Contributing
-We welcome [issues](https://github.com/cci-images/base/issues) to and [pull requests](https://github.com/cci-images/base/pulls) against this repository!
-
-### Publishing
-Merging to `master` publishes a new image to the `edge` tag.
-The Scheduled Workflow promotes `edge` to a `<year>.<month>` tag on the 2nd of every month.
-The month tags can be manually updated due to security fixes or severe bugs via a Git Tag matching the Docker tag.
-
+We welcome [issues](https://github.com/cimg/base/issues) to and [pull requests](https://github.com/cimg/base/pulls) against this repository!
 
 This image is maintained by the Community & Partner Engineering Team.
