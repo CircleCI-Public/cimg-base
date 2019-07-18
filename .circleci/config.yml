@@ -115,6 +115,7 @@ workflows:
           dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *dev-filters
+          requires: [ubuntu-edge-dev]
 
       - cimg/build-test-deploy:
           name: node-edge-dev
