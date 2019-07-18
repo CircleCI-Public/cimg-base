@@ -8,7 +8,7 @@ SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
 # Install NVM
 RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
-  https://api.github.com/repos//nvm-sh/nvm/releases/latest | \
+  https://api.github.com/repos/nvm-sh/nvm/releases/latest | \
   jq '.tag_name' | sed -E 's/"//g') \
   # extract latest version from GitHub releases API
   && curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash \
