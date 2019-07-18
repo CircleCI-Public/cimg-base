@@ -18,7 +18,7 @@ RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
 ENV NVM_DIR $HOME/.nvm
 
 # Verify NVM
-RUN command -v nvm d\
+RUN command -v nvm \
 	&& nvm --version | grep "$NVM_VERSION"
 
 # Add node and npm to path so the commands are available
