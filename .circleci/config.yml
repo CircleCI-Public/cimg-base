@@ -13,7 +13,7 @@ master-filters: &master-filters
     only: master
 
 lint-ignore-rules: &lint-ignore-rules
-  DL3008,DL3015,SC2143 #,SC1051,SC1053,SC1059,DL4006
+  DL3008,DL3015,SC2143,SC2039,SC1090,DL3006 # remove DL3006 later, it's a good one
 
 workflows:
   monthly-cron:

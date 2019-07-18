@@ -3,6 +3,9 @@ FROM cimg/base
 
 LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
+# Set default shell for building image
+SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
+
 # Install NVM
 RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
   https://api.github.com/repos//nvm-sh/nvm/releases/latest | \
@@ -16,6 +19,9 @@ RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
 
 ENV NVM_DIR $HOME/.nvm
 
-# add node and npm to path so the commands are available
+# Add node and npm to path so the commands are available
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+
+# Set default shell for users
+SHELL ["/bin/bash", "-c"]
