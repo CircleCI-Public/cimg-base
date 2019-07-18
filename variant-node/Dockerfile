@@ -1,5 +1,5 @@
 # The Node.js variant of the base image.
-FROM cimg/base
+FROM cimg/base:edge
 
 LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
