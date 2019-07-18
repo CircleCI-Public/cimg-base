@@ -110,6 +110,25 @@ RUN declare -i INDEX=0 \
   && command -v docker-compose \
   && docker-compose --version | grep "$DOCKER_COMPOSE_VERSION"
 
-# Missing dockerize and the CircleCI CLI
+# Install dockerize
+RUN DOCKERIZE_VERSION=$(curl --show-error --location --fail --retry 3 \
+  https://api.github.com/repos/jwilder/dockerize/releases/latest | \
+  jq '.tag_name' | sed -E 's/"//g') \
+  # extract latest version from GitHub releases API
+  && PLATFORM=linux-amd64 \
+  # set platform; construct binary download URL
+  && DOCKERIZE_BINARY_URL="https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSION/dockerize-$PLATFORM-$DOCKERIZE_VERSION.tar.gz" \
+  # download & install binary
+  && curl -O --show-error --location --fail --retry 3 \
+    "$DOCKERIZE_BINARY_URL" \
+  && tar xf "dockerize-$PLATFORM-$DOCKERIZE_VERSION.tar.gz" \
+  && rm -f "dockerize-$PLATFORM-$DOCKERIZE_VERSION.tar.gz" \
+  && mv dockerize /usr/bin \
+  && chmod +x /usr/bin/dockerize \
+  # verify version
+  && command -v dockerize \
+  && dockerize --version | grep "$DOCKERIZE_VERSION"
+
+# Missing the CircleCI CLI
 
 SHELL ["/bin/bash", "-c"]
