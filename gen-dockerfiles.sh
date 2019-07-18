@@ -3,6 +3,6 @@
 version=( "$@" )
 declare -a variants=("node")
 
-repo="circleciimages/base:"
+repo="cimg/base:"
 
 sed -r -e 's!%%BASE_VERSION%%!'"$version"'!g' "ubuntu/Dockerfile.template" > "ubuntu/Dockerfile"
