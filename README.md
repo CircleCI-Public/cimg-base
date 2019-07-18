@@ -29,6 +29,7 @@ Mutable tags representing the builds of this image and its Node variant followin
 ### `latest`
 Mutable tag that represents the latest non-Node-variant, vanilla `cimg/base` image, functionally duplicating whichever is the more recent of the `edge` and `stable` tags. Anyone calling the `cimg/base` image without specifying a tag will get this version of the image.
 
+
 ## Resources
 
 [CircleCI Docker Image Docs]: https://circleci.com/docs/2.0/circleci-images/#section=configuration
