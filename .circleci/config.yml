@@ -1,6 +1,7 @@
 version: 2.1
 
 orbs:
+  bt: circleci/build-tools@2.6.3
   cimg: cci-dev/cimg@0.0.10
   docker: circleci/docker@0.5.10
 
@@ -54,6 +55,7 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-monthly
+          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
@@ -110,6 +112,7 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-edge-dev
+          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
@@ -167,6 +170,7 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-edge-master
+          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
