@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   bt: circleci/build-tools@2.6.3
-  cimg: cci-dev/cimg@0.0.10
+  cimg: cci-dev/cimg@0.0.11
   docker: circleci/docker@0.5.10
 
 dev-filters: &dev-filters
@@ -14,7 +14,7 @@ master-filters: &master-filters
     only: master
 
 lint-ignore-rules: &lint-ignore-rules
-  DL3006,DL3007,DL3008,DL3015,SC1072,SC1090,SC2039,SC2143 # remove DL3006 later, it's a good one
+  DL3006,DL3007,DL3008,DL3015,SC1072,SC1090,SC2039,SC2143 # remove DL3006 later, it's an important one
 
 workflows:
   monthly-cron:
@@ -38,12 +38,12 @@ workflows:
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
           deploy: true
-          publish-tag: stable
+          publish-tags: stable,latest
           filters: *master-filters
           requires: [lint-ubuntu-monthly]
           post-steps:
             - run:
-                name: Prepare Node variant Dockerfile
+                name: Prepare monthly Node variant Dockerfile from template
                 command: |
                   version="cimg/base:$( date +%Y.%m )"
 
@@ -75,7 +75,7 @@ workflows:
           extra-build-args: --pull
           goss-yaml-dir-path: variant-node
           deploy: true
-          publish-tag: stable-node
+          publish-tags: stable-node
           filters: *master-filters
           requires: [lint-node-monthly]
 
@@ -96,11 +96,12 @@ workflows:
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
           deploy: true
+          publish-tags: latest
           filters: *dev-filters
           requires: [lint-ubuntu-edge-dev]
           post-steps:
             - run:
-                name: Prepare Node variant Dockerfile
+                name: Prepare ccitest/base Node variant Dockerfile from template
                 command: |
                   version="ccitest/base:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}"
 
@@ -153,12 +154,12 @@ workflows:
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
           deploy: true
-          publish-tag: latest
+          publish-tags: latest
           filters: *master-filters
           requires: [lint-ubuntu-edge-master]
           post-steps:
             - run:
-                name: Prepare Node variant Dockerfile
+                name: Prepare edge Node variant Dockerfile from template
                 command: |
                   version=cimg/base:edge
 
