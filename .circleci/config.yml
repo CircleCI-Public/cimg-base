@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   bt: circleci/build-tools@2.6.3
-  cimg: cci-dev/cimg@0.0.13
+  cimg: cci-dev/cimg@0.0.14
   docker: circleci/docker@0.5.10
 
 dev-filters: &dev-filters
@@ -37,6 +37,7 @@ workflows:
           image-tag: "$( date +%Y.%m )"
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
+          test-suite-name: ubuntu
           deploy: true
           publish-tags: stable,latest
           filters: *master-filters
@@ -74,6 +75,7 @@ workflows:
           image-tag: "$( date +%Y.%m )-node"
           extra-build-args: --pull
           goss-yaml-dir-path: variant-node
+          test-suite-name: variant-node
           deploy: true
           publish-tags: stable-node
           filters: *master-filters
