@@ -1,5 +1,12 @@
 # The Node.js variant of the base image.
-FROM cimg/base:edge
+#
+# `FROM` value will be:
+#
+# cimg/base:<year>.<month> for monthly releases
+# cimg/base:edge for commits to master
+# ccitest/base:<branch>-<commit> for commits to non-master branches
+
+FROM %%BASE_ORG_BASE_IMAGE_BASE_TAG%%
 
 LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 

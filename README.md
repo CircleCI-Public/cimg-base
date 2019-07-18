@@ -22,11 +22,10 @@ Any new or removed tools from the base image in the last 31 days will be reflect
 For example, the `2019.04` image will include any changes to this repo/image that occurred from March 1 - 31st, 2019.
 Monthly releases are built on the 2nd of every month.
 
-`:latest` - An alias for the most recent monthly release.
-For example, if today's date was April 15th, 2019, then the `:latest` tag would be an alias for the `:2019.04` tag.
+`:stable` - An alias for the most recent monthly release.
+For example, if today's date was April 15th, 2019, then the `:stable` tag would be an alias for the `:2019.04` tag.
 
 `:edge` - The latest changes to this Docker image that's available in the `master` branch of this repo.
-
 
 ## Resources
 
