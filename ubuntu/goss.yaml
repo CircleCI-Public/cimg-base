@@ -1,7 +1,3 @@
-file:
-  /bin/bash:
-    exists: true
-
 command:
   bash:
     exit-status: 0
@@ -9,12 +5,10 @@ command:
     exit-status: 0
   docker:
     exit-status: 0
-  docker-compose:
+  docker-compose --version:
     exit-status: 0
-    exec: "docker-compose --version"
-  dockerize:
+  dockerize --version:
     exit-status: 0
-    exec: "dockerize --version"
 
 package:
   build-essential:
