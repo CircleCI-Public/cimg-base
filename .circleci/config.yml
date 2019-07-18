@@ -1,8 +1,9 @@
 version: 2.1
 
 orbs:
-  cimg: cci-dev/cimg@0.0.8
-  docker: circleci/docker@0.5.9
+  bt: circleci/build-tools@2.6.3
+  cimg: cci-dev/cimg@0.0.10
+  docker: circleci/docker@0.5.10
 
 dev-filters: &dev-filters
   branches:
@@ -13,7 +14,7 @@ master-filters: &master-filters
     only: master
 
 lint-ignore-rules: &lint-ignore-rules
-  DL3006,DL3008,DL3015,SC1072,SC1090,SC2039,SC2143 # remove DL3006 later, it's a good one
+  DL3006,DL3007,DL3008,DL3015,SC1072,SC1090,SC2039,SC2143 # remove DL3006 later, it's a good one
 
 workflows:
   monthly-cron:
@@ -33,16 +34,31 @@ workflows:
           context: image-publishing
           dockerfile-path: ubuntu
           image-name: cimg/base
-          image-tag: "${CIRCLE_SHA1:0:7}"
+          image-tag: "$( date +%Y.%m )"
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
           deploy: true
-          publish-tag: "$( date +%Y.%m )"
+          publish-tag: stable
           filters: *master-filters
           requires: [lint-ubuntu-monthly]
+          post-steps:
+            - run:
+                name: Prepare Node variant Dockerfile
+                command: |
+                  version="cimg/base:$( date +%Y.%m )"
+
+                  sed -r -e 's!%%BASE_ORG_BASE_IMAGE_BASE_TAG%%!'"$version"'!g' variant-node/Dockerfile.template > variant-node/Dockerfile
+
+            - persist_to_workspace:
+                root: ~/
+                paths: project
 
       - docker/hadolint:
           name: lint-node-monthly
+          pre-steps: [bt/install-ci-tools]
+          checkout: false
+          attach-workspace: true
+          workspace-root: ~/
           dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
@@ -50,13 +66,16 @@ workflows:
       - cimg/build-test-deploy:
           name: node-monthly
           context: image-publishing
+          checkout: false
+          attach-workspace: true
+          workspace-root: ~/
           dockerfile-path: variant-node
           image-name: cimg/base
-          image-tag: "${CIRCLE_SHA1:0:7}-node"
+          image-tag: "$( date +%Y.%m )-node"
           extra-build-args: --pull
           goss-yaml-dir-path: variant-node
           deploy: true
-          publish-tag: "$( date +%Y.%m )-node"
+          publish-tag: stable-node
           filters: *master-filters
           requires: [lint-node-monthly]
 
@@ -70,27 +89,50 @@ workflows:
 
       - cimg/build-test-deploy:
           name: ubuntu-edge-dev
+          context: image-publishing
           dockerfile-path: ubuntu
-          image-name: cimg/base
-          image-tag: "${CIRCLE_SHA1:0:7}"
+          image-name: ccitest/base
+          image-tag: "$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}"
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
+          deploy: true
           filters: *dev-filters
           requires: [lint-ubuntu-edge-dev]
+          post-steps:
+            - run:
+                name: Prepare Node variant Dockerfile
+                command: |
+                  version="ccitest/base:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}"
+
+                  sed -r -e 's!%%BASE_ORG_BASE_IMAGE_BASE_TAG%%!'"$version"'!g' variant-node/Dockerfile.template > variant-node/Dockerfile
+
+            - persist_to_workspace:
+                root: ~/
+                paths: project
 
       - docker/hadolint:
           name: lint-node-edge-dev
+          pre-steps: [bt/install-ci-tools]
+          checkout: false
+          attach-workspace: true
+          workspace-root: ~/
           dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *dev-filters
+          requires: [ubuntu-edge-dev]
 
       - cimg/build-test-deploy:
           name: node-edge-dev
+          context: image-publishing
+          checkout: false
+          attach-workspace: true
+          workspace-root: ~/
           dockerfile-path: variant-node
-          image-name: cimg/base
-          image-tag: "${CIRCLE_SHA1:0:7}-node"
+          image-name: ccitest/base
+          image-tag: "$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}-node"
           extra-build-args: --pull
           goss-yaml-dir-path: variant-node
+          deploy: true
           filters: *dev-filters
           requires: [lint-node-edge-dev]
 
@@ -107,16 +149,31 @@ workflows:
           context: image-publishing
           dockerfile-path: ubuntu
           image-name: cimg/base
-          image-tag: "${CIRCLE_SHA1:0:7}"
+          image-tag: edge
           extra-build-args: --pull
           goss-yaml-dir-path: ubuntu
           deploy: true
-          publish-tag: edge
+          publish-tag: latest
           filters: *master-filters
           requires: [lint-ubuntu-edge-master]
+          post-steps:
+            - run:
+                name: Prepare Node variant Dockerfile
+                command: |
+                  version=cimg/base:edge
+
+                  sed -r -e 's!%%BASE_ORG_BASE_IMAGE_BASE_TAG%%!'"$version"'!g' variant-node/Dockerfile.template > variant-node/Dockerfile
+
+            - persist_to_workspace:
+                root: ~/
+                paths: project
 
       - docker/hadolint:
           name: lint-node-edge-master
+          pre-steps: [bt/install-ci-tools]
+          checkout: false
+          attach-workspace: true
+          workspace-root: ~/
           dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
@@ -125,12 +182,14 @@ workflows:
       - cimg/build-test-deploy:
           name: node-edge-master
           context: image-publishing
+          checkout: false
+          attach-workspace: true
+          workspace-root: ~/
           dockerfile-path: variant-node
           image-name: cimg/base
-          image-tag: "${CIRCLE_SHA1:0:7}-node"
+          image-tag: edge-node
           extra-build-args: --pull
           goss-yaml-dir-path: variant-node
           deploy: true
-          publish-tag: edge-node
           filters: *master-filters
           requires: [lint-node-edge-master]

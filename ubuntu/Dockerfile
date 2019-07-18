@@ -1,8 +1,10 @@
 # vim:set ft=dockerfile:
 #
-# The Ubuntu-based CircleCI Docker Image. Only use Ubuntu Long-Term Support
-# (LTS) releases.
-FROM ubuntu:18.04
+# Ubuntu-based CircleCI Docker image.
+# Use the latest Ubuntu Long-Term Support (LTS) release:
+# https://hub.docker.com/_/ubuntu
+
+FROM ubuntu:latest
 
 LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
@@ -12,37 +14,37 @@ SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 # Install utilities
 RUN apt-get update \
   && apt-get install -y \
-		build-essential \
-		bzip2 \
-		ca-certificates \
-		curl \
-		git \
-		gnupg \
-		gzip \
-		jq \
-		locales \
-		make \
-		mercurial \
-		net-tools \
-		netcat \
-		openssh-client \
-		parallel \
-		tar \
-		unzip \
-		wget \
-		xvfb \
-		zip \
-	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
+    build-essential \
+    bzip2 \
+    ca-certificates \
+    curl \
+    git \
+    gnupg \
+    gzip \
+    jq \
+    locales \
+    make \
+    mercurial \
+    net-tools \
+    netcat \
+    openssh-client \
+    parallel \
+    tar \
+    unzip \
+    wget \
+    xvfb \
+    zip \
+  && apt-get clean \
+  && rm -rf /var/lib/apt/lists/*
 
-# Install Docker
+# Install latest stable Docker
 RUN declare -i INDEX=0 \
   # Determine latest stable Docker version
   && while true; \
-  	do INDEX_VERSION=$(curl --show-error --location --fail --retry 3 \
+    do INDEX_VERSION=$(curl --show-error --location --fail --retry 3 \
       https://api.github.com/repos/docker/cli/tags | \
       jq --argjson index "$INDEX" '.[$index].name') \
-  		# Filter out betas & release candidates
+      # Filter out betas & release candidates
       && if [[ $(echo "$INDEX_VERSION" | grep -v beta | grep -v rc) ]]; then \
         DOCKER_VERSION="${INDEX_VERSION:1:$((${#INDEX_VERSION} - 1 - 1))}" \
         && break; \
@@ -65,7 +67,7 @@ RUN declare -i INDEX=0 \
   && command -v docker \
   && docker --version | grep "$DOCKER_VERSION_NUMBER"
 
-# Install docker-compose
+# Install latest stable docker-compose
 RUN declare -i INDEX=0 \
   # Determine latest stable docker-compose version
   && while true; \
@@ -110,7 +112,7 @@ RUN declare -i INDEX=0 \
   && command -v docker-compose \
   && docker-compose --version | grep "$DOCKER_COMPOSE_VERSION"
 
-# Install dockerize
+# Install latest stable dockerize
 RUN DOCKERIZE_VERSION=$(curl --show-error --location --fail --retry 3 \
   https://api.github.com/repos/jwilder/dockerize/releases/latest | \
   jq '.tag_name' | sed -E 's/"//g') \
@@ -129,7 +131,7 @@ RUN DOCKERIZE_VERSION=$(curl --show-error --location --fail --retry 3 \
   && command -v dockerize \
   && dockerize --version | grep "$DOCKERIZE_VERSION"
 
-# Install CircleCI CLI
+# Install latest stable CircleCI CLI
 RUN CIRCLECI_CLI_VERSION=$(curl --show-error --location --fail --retry 3 \
   https://api.github.com/repos/CircleCI-Public/circleci-cli/releases/latest | \
   jq '.tag_name' | sed -E 's/"//g') \
