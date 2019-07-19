@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   bt: circleci/build-tools@2.6.3
-  cimg: cci-dev/cimg@0.0.18
+  cimg: cci-dev/cimg@0.0.19
   docker: circleci/docker@0.5.10
 
 dev-filters: &dev-filters
@@ -15,6 +15,26 @@ master-filters: &master-filters
 
 lint-ignore-rules: &lint-ignore-rules
   DL3006,DL3007,DL3008,DL3015,SC1072,SC1090,SC2039,SC2143 # remove DL3006 later, it's an important one
+
+commands:
+  prepare-node-dockerfile-from-template:
+    parameters:
+      base-org-image-tag:
+        type: string
+      step-name:
+        type: string
+    steps:
+      - run:
+          name: <<parameters.step-name>>
+          command: |
+            version=<<parameters.base-org-image-tag>>
+
+            sed -r -e 's!%%BASE_ORG_BASE_IMAGE_BASE_TAG%%!'"$version"'!g' \
+              variant-node/Dockerfile.template > variant-node/Dockerfile
+
+      - persist_to_workspace:
+          root: ~/
+          paths: project
 
 workflows:
   monthly-cron:
@@ -43,16 +63,9 @@ workflows:
           filters: *master-filters
           requires: [lint-ubuntu-monthly]
           post-steps:
-            - run:
-                name: Prepare monthly Node variant Dockerfile from template
-                command: |
-                  version="cimg/base:$( date +%Y.%m )"
-
-                  sed -r -e 's!%%BASE_ORG_BASE_IMAGE_BASE_TAG%%!'"$version"'!g' variant-node/Dockerfile.template > variant-node/Dockerfile
-
-            - persist_to_workspace:
-                root: ~/
-                paths: project
+            - prepare-node-dockerfile-from-template:
+                step-name: Prepare monthly Node variant Dockerfile from template
+                base-org-image-tag: "cimg/base:$( date +%Y.%m )"
 
       - docker/hadolint:
           name: lint-node-monthly
@@ -73,7 +86,11 @@ workflows:
           dockerfile-path: variant-node
           image-name: cimg/base
           image-tag: "$( date +%Y.%m )-node"
-          extra-build-args: --pull
+          extra-build-args: |
+            --pull --build-arg NODE_VERSION=$(curl \
+              --show-error --location --fail --retry 3 \
+              https://api.github.com/repos/nodejs/node/releases | \
+              grep "(LTS)" | head -n 1 | sed -E 's|.*Version ||' | cut -f1 -d" ")
           goss-yaml-dir-path: variant-node
           test-suite-name: variant-node
           deploy: true
@@ -103,16 +120,9 @@ workflows:
           filters: *dev-filters
           requires: [lint-ubuntu-edge-dev]
           post-steps:
-            - run:
-                name: Prepare ccitest/base Node variant Dockerfile from template
-                command: |
-                  version="ccitest/base:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}"
-
-                  sed -r -e 's!%%BASE_ORG_BASE_IMAGE_BASE_TAG%%!'"$version"'!g' variant-node/Dockerfile.template > variant-node/Dockerfile
-
-            - persist_to_workspace:
-                root: ~/
-                paths: project
+            - prepare-node-dockerfile-from-template:
+                step-name: Prepare ccitest/base Node variant Dockerfile from template
+                base-org-image-tag: "ccitest/base:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}"
 
       - docker/hadolint:
           name: lint-node-edge-dev
@@ -134,7 +144,11 @@ workflows:
           dockerfile-path: variant-node
           image-name: ccitest/base
           image-tag: "$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}-node"
-          extra-build-args: --pull
+          extra-build-args: |
+            --pull --build-arg NODE_VERSION=$(curl \
+              --show-error --location --fail --retry 3 \
+              https://api.github.com/repos/nodejs/node/releases | \
+              grep "(LTS)" | head -n 1 | sed -E 's|.*Version ||' | cut -f1 -d" ")
           goss-yaml-dir-path: variant-node
           test-suite-name: variant-node
           deploy: true
@@ -163,16 +177,9 @@ workflows:
           filters: *master-filters
           requires: [lint-ubuntu-edge-master]
           post-steps:
-            - run:
-                name: Prepare edge Node variant Dockerfile from template
-                command: |
-                  version=cimg/base:edge
-
-                  sed -r -e 's!%%BASE_ORG_BASE_IMAGE_BASE_TAG%%!'"$version"'!g' variant-node/Dockerfile.template > variant-node/Dockerfile
-
-            - persist_to_workspace:
-                root: ~/
-                paths: project
+            - prepare-node-dockerfile-from-template:
+                step-name: Prepare edge Node variant Dockerfile from template
+                base-org-image-tag: cimg/base:edge
 
       - docker/hadolint:
           name: lint-node-edge-master
@@ -194,7 +201,11 @@ workflows:
           dockerfile-path: variant-node
           image-name: cimg/base
           image-tag: edge-node
-          extra-build-args: --pull
+          extra-build-args: |
+            --pull --build-arg NODE_VERSION=$(curl \
+              --show-error --location --fail --retry 3 \
+              https://api.github.com/repos/nodejs/node/releases | \
+              grep "(LTS)" | head -n 1 | sed -E 's|.*Version ||' | cut -f1 -d" ")
           goss-yaml-dir-path: variant-node
           test-suite-name: variant-node
           deploy: true
