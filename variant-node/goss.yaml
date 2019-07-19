@@ -11,13 +11,10 @@ command:
     exit-status: 0
   node --version:
     exit-status: 0
-    timeout: 10000
   npm --version:
     exit-status: 0
-    timeout: 10000
   nvm --version:
     exit-status: 0
-    timeout: 10000
 
 package:
   build-essential:
