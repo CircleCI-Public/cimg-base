@@ -24,15 +24,16 @@ RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
   jq '.tag_name' | sed -E 's/"//g') \
   # extract latest version from GitHub releases API
   && curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash \
-	&& source "$NVM_DIR/nvm.sh" \
-	&& echo "source $NVM_DIR/nvm.sh" >> ~/.bashrc \
+	&& source ~/.nvm/nvm.sh \
+	&& echo "source ~/.nvm/nvm.sh" >> ~/.bashrc \
 	&& command -v nvm \
 	&& nvm --version | grep "${NVM_VERSION:1}" \
 	&& nvm install "$NODE_VERSION" \
 	# set Node LTS release as default
 	&& nvm use "$NODE_VERSION"
 
-# Add Node, NPM to path so the commands are available
+# Add Node, NPM, NVM to path so the commands are available
+ENV NVM_DIR $HOME/.nvm
 ENV NODE_PATH "$NVM_DIR/v$NODE_VERSION/lib/node_modules"
 ENV PATH "$NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH"
 
