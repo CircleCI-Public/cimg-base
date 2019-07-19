@@ -13,32 +13,60 @@ LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partn
 # Set default shell for building image
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
-ARG NODE_VERSION
-ENV NODE_VERSION="$NODE_VERSION"
-
-# Install NVM
-RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
-  https://api.github.com/repos/nvm-sh/nvm/releases/latest | \
-  jq '.tag_name' | sed -E 's/"//g') \
-  # extract latest version from GitHub releases API
-  && curl -o- "https://raw.githubusercontent.com/nvm-sh/nvm/$NVM_VERSION/install.sh" | bash \
-	&& source ~/.nvm/nvm.sh \
-	&& echo "source ~/.nvm/nvm.sh" >> ~/.bashrc \
-	&& command -v nvm \
-	&& nvm --version | grep "${NVM_VERSION:1}" \
-	&& nvm install "$NODE_VERSION" \
-	# set Node LTS release as default
-	&& nvm use "$NODE_VERSION"
-
-# Add Node, NPM, NVM to path so the commands are available
-ENV NVM_DIR $HOME/.nvm
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
-
-# Set symmlinks
-RUN ln -sf "$NVM_DIR/versions/node/v$NODE_VERSION/bin/node" /usr/bin/nodejs \
-	&& ln -sf "$NVM_DIR/versions/node/v$NODE_VERSION/bin/node" /usr/bin/node \
-	&& ln -sf "$NVM_DIR/versions/node/v$NODE_VERSION/bin/npm" /usr/bin/npm
+# Install Node
+RUN NODE_VERSION=$(curl --show-error --location --fail --retry 3 \
+	https://api.github.com/repos/nodejs/node/releases | grep "(LTS)" | \
+	head -n 1 | sed -E 's|.*Version ||' | cut -f1 -d" ") \
+	# grab Node.js release keys
+	&& curl --show-error --location --fail --retry 3 \
+    https://raw.githubusercontent.com/nodejs/node/master/README.md | \
+    grep -E '[A-Z0-9]{40}' | \
+    sed -E 's/gpg --keyserver pool.sks-keyservers.net --recv-keys //g' | \
+    sed -E 's/(`|\$ )//g' > NODEJS_TRUSTED_RELEASE_KEYS \
+  # set keyservers to use
+  && echo "hkp://p80.pool.sks-keyservers.net:80" >> KEYSERVERS \
+  && echo "hkp://ipv4.pool.sks-keyservers.net" >> KEYSERVERS \
+	&& echo "hkp://pgp.mit.edu:80" >> KEYSERVERS \
+	&& echo "hkps://ha.pool.sks-keyservers.net" >> KEYSERVERS \
+	&& echo "hkp://keyserver.ubuntu.com:80" >> KEYSERVERS \
+	# import release keys
+	&& while read key; do \
+    for keyserver in $(cat KEYSERVERS); do \
+      tempName=$(mktemp) && \
+      gpg --status-fd 1 \
+        --keyserver "$keyserver" --keyserver-options "timeout=1" \
+        --recv-keys "$key" 1> "$tempName" || true && \
+      if [[ $(grep "^\[GNUPG\:\] IMPORT_OK "[[:digit:]]*" "$key"$" $tempName && \
+        grep "^\[GNUPG\:\] IMPORT_RES 1" $tempName) ]]; then \
+        echo "Success! Imported $key from $keyserver" && \
+        break \
+      else \
+        continue \
+      fi \
+    done \
+  done < NODEJS_TRUSTED_RELEASE_KEYS \
+  && rm -f NODEJS_TRUSTED_RELEASE_KEYS KEYSERVERS \
+  # download encrypted shasums file
+  && curl -O --show-error --location --fail --retry 3 \
+    "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
+  # decrypt shasums file
+  && gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc && rm -f SHASUMS256.txt.asc \
+  # download/install node
+  && curl -O --show-error --location --fail --retry 3 \
+    "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" \
+  # verify node tar via shasum256
+  && grep "node-v$NODE_VERSION-linux-x64.tar.gz" SHASUMS256.txt | sha256sum -c - && rm -f SHASUMS256.txt \
+  && tar -xzf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local \
+    --strip-components=1 --no-same-owner \
+  && rm -f "node-v$NODE_VERSION-linux-x64.tar.gz" \
+  && if [[ ! -e /usr/local/bin/nodejs ]]; then \
+    ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+  fi \
+  # test/verify version
+  && command -v node \
+  && command -v npm \
+  && node --version | grep "$NODE_VERSION" \
+  && npm --version
 
 # Set default shell for users
 SHELL ["/bin/bash", "-c"]

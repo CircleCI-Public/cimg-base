@@ -13,8 +13,6 @@ command:
     exit-status: 0
   npm --version:
     exit-status: 0
-  nvm --version:
-    exit-status: 0
 
 package:
   build-essential:
