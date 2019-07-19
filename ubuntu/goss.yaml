@@ -1,4 +1,57 @@
-file:
-  # ensure a Bash shell exists
-  /bin/bash:
+command:
+  bash:
+    exit-status: 0
+  circleci:
+    exit-status: 0
+  docker:
+    exit-status: 0
+  docker-compose --version:
+    exit-status: 0
+  dockerize --version:
+    exit-status: 0
+
+package:
+  build-essential:
+    installed: true
+  bzip2:
+    installed: true
+  ca-certificates:
+    installed: true
+  curl:
+    installed: true
+  git:
+    installed: true
+  gnupg:
+    installed: true
+  gzip:
+    installed: true
+  jq:
+    installed: true
+  locales:
+    installed: true
+  make:
+    installed: true
+  mercurial:
+    installed: true
+  net-tools:
+    installed: true
+  netcat:
+    installed: true
+  openssh-client:
+    installed: true
+  parallel:
+    installed: true
+  tar:
+    installed: true
+  unzip:
+    installed: true
+  wget:
+    installed: true
+  xvfb:
+    installed: true
+  zip:
+    installed: true
+
+user:
+  root:
     exists: true
