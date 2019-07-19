@@ -14,54 +14,9 @@ LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partn
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
 # Install Node
-RUN NODE_VERSION=$(curl --show-error --location --fail --retry 3 \
-	https://api.github.com/repos/nodejs/node/releases | grep "(LTS)" | \
-	head -n 1 | sed -E 's|.*Version ||' | cut -f1 -d" ") \
-	# grab Node.js release keys
-	&& curl --show-error --location --fail --retry 3 \
-		https://raw.githubusercontent.com/nodejs/node/master/README.md | \
-		grep -E '[A-Z0-9]{40}' | \
-		sed -E 's/gpg --keyserver pool.sks-keyservers.net --recv-keys //g' | \
-		sed -E 's/(`|\$ )//g' > NODEJS_TRUSTED_RELEASE_KEYS \
-	# set keyservers to use
-	&& echo "hkp://p80.pool.sks-keyservers.net:80" >> KEYSERVERS \
-	&& echo "hkp://ipv4.pool.sks-keyservers.net" >> KEYSERVERS \
-	&& echo "hkp://pgp.mit.edu:80" >> KEYSERVERS \
-	&& echo "hkps://ha.pool.sks-keyservers.net" >> KEYSERVERS \
-	&& echo "hkp://keyserver.ubuntu.com:80" >> KEYSERVERS \
-	# import release keys
-	&& while read key; \
-		do for keyserver in $(cat KEYSERVERS); \
-			do tempName=$(mktemp) \
-			&& gpg --status-fd 1 \
-				--keyserver "$keyserver" --keyserver-options "timeout=1" \
-				--recv-keys "$key" 1> "$tempName" || true \
-			&& if [[ $(grep "^\[GNUPG\:\] IMPORT_OK "[[:digit:]]*" "$key"$" $tempName \
-				&& grep "^\[GNUPG\:\] IMPORT_RES 1" "$tempName") ]]; then \
-				echo "Success! Imported $key from $keyserver" && \
-				break; \
-			else \
-				continue; \
-			fi; \
-		done \
-	done < NODEJS_TRUSTED_RELEASE_KEYS \
-	&& rm -f NODEJS_TRUSTED_RELEASE_KEYS KEYSERVERS \
-	# download encrypted shasums file
-	&& curl -O --show-error --location --fail --retry 3 \
-		"https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
-	# decrypt shasums file
-	&& gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc && rm -f SHASUMS256.txt.asc \
-	# download/install node
-	&& curl -O --show-error --location --fail --retry 3 \
-		"https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.gz" \
-	# verify node tar via shasum256
-	&& grep "node-v$NODE_VERSION-linux-x64.tar.gz" SHASUMS256.txt | sha256sum -c - && rm -f SHASUMS256.txt \
-	&& tar -xzf "node-v$NODE_VERSION-linux-x64.tar.gz" -C /usr/local \
-		--strip-components=1 --no-same-owner \
-	&& rm -f "node-v$NODE_VERSION-linux-x64.tar.gz" \
-	&& if [[ ! -e /usr/local/bin/nodejs ]]; then \
-		ln -s /usr/local/bin/node /usr/local/bin/nodejs; \
-	fi \
+RUN wget https://raw.githubusercontent.com/tj/n/641d6d0bbee7b30b005bb961c0f3b5686a7b305b/bin/n -O /usr/local/bin/n \
+	&& chmod +x /usr/local/bin/n \
+	&& n lts \
 	# test/verify version
 	&& command -v node \
 	&& command -v npm \
