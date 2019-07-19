@@ -14,6 +14,9 @@ FROM cimg/base:stable
 
 You can also use this image directly in CircleCI if you need a light-weight image to run generic commands or orb-based commands.
 
+## Variants
+
+Currently, there is only a Node variant of this image. The Node variant includes the latest LTS version of Node. To install a different version, use [CircleCI's Node orb](http://circleci.com/orbs/registry/orb/circleci/node#commands-install-node). See below for explanation of specific `-node` (and other) tags.
 
 ## Tags
 
