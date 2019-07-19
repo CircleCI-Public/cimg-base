@@ -14,7 +14,7 @@ master-filters: &master-filters
     only: master
 
 lint-ignore-rules: &lint-ignore-rules
-  DL3006,DL3007,DL3008,DL3015,SC1072,SC1090,SC2039,SC2143 # remove DL3006 later, it's an important one
+  DL3006,DL3007,DL3008,DL3015,SC1072,SC1090,SC2039,SC2143,SC2162,SC2013,SC2062,SC2027,SC2086 # remove DL3006 later, it's an important one
 
 commands:
   prepare-node-dockerfile-from-template:
