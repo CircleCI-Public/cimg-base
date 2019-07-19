@@ -13,7 +13,7 @@ LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partn
 # Set default shell for building image
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
-ENV NVM_DIR /usr/local/nvm
+ENV NVM_DIR "$HOME/.nvm"
 
 ARG NODE_VERSION
 ENV NODE_VERSION="$NODE_VERSION"
@@ -28,9 +28,9 @@ RUN NVM_VERSION=$(curl --show-error --location --fail --retry 3 \
 	&& echo "source $NVM_DIR/nvm.sh" >> ~/.bashrc \
 	&& command -v nvm \
 	&& nvm --version | grep "${NVM_VERSION:1}" \
-	&& nvm install "NODE_VERSION" \
+	&& nvm install "$NODE_VERSION" \
 	# set Node LTS release as default
-	&& nvm use "NODE_VERSION"
+	&& nvm use "$NODE_VERSION"
 
 # Add Node, NPM to path so the commands are available
 ENV NODE_PATH "$NVM_DIR/v$NODE_VERSION/lib/node_modules"
