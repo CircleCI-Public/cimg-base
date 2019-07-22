@@ -45,6 +45,7 @@ workflows:
     jobs:
       - docker/hadolint:
           name: lint-ubuntu-monthly
+          pre-steps: [bt/install-ci-tools]
           dockerfile: ubuntu/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
@@ -69,7 +70,6 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-monthly
-          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
@@ -99,6 +99,7 @@ workflows:
     jobs:
       - docker/hadolint:
           name: lint-ubuntu-edge-dev
+          pre-steps: [bt/install-ci-tools]
           dockerfile: ubuntu/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *dev-filters
@@ -123,7 +124,6 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-edge-dev
-          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
@@ -152,6 +152,7 @@ workflows:
     jobs:
       - docker/hadolint:
           name: lint-ubuntu-edge-master
+          pre-steps: [bt/install-ci-tools]
           dockerfile: ubuntu/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
@@ -176,7 +177,6 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-edge-master
-          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
