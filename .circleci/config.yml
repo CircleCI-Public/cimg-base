@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   bt: circleci/build-tools@2.6.3
   cimg: cci-dev/cimg@0.0.19
-  docker: circleci/docker@0.5.10
+  docker: circleci/docker@0.5.12
 
 dev-filters: &dev-filters
   branches:
@@ -45,10 +45,10 @@ workflows:
     jobs:
       - docker/hadolint:
           name: lint-ubuntu-monthly
-          pre-steps: [bt/install-ci-tools]
-          dockerfile: ubuntu/Dockerfile
+          dockerfiles: ubuntu/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
+          artifacts-path: ubuntu
           post-steps:
             - prepare-node-dockerfile-from-template:
                 step-name: Prepare monthly Node variant Dockerfile from template
@@ -70,13 +70,13 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-monthly
-          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
-          dockerfile: variant-node/Dockerfile
+          dockerfiles: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
+          artifacts-path: variant-node
           requires: [lint-ubuntu-monthly]
 
       - cimg/build-test-deploy:
@@ -100,10 +100,10 @@ workflows:
     jobs:
       - docker/hadolint:
           name: lint-ubuntu-edge-dev
-          pre-steps: [bt/install-ci-tools]
-          dockerfile: ubuntu/Dockerfile
+          dockerfiles: ubuntu/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *dev-filters
+          artifacts-path: ubuntu
           post-steps:
             - prepare-node-dockerfile-from-template:
                 step-name: Prepare ccitest/base Node variant Dockerfile from template
@@ -125,13 +125,13 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-edge-dev
-          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
-          dockerfile: variant-node/Dockerfile
+          dockerfiles: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *dev-filters
+          artifacts-path: variant-node
           requires: [lint-ubuntu-edge-dev]
 
       - cimg/build-test-deploy:
@@ -154,10 +154,10 @@ workflows:
     jobs:
       - docker/hadolint:
           name: lint-ubuntu-edge-master
-          pre-steps: [bt/install-ci-tools]
-          dockerfile: ubuntu/Dockerfile
+          dockerfiles: ubuntu/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
+          artifacts-path: ubuntu
           post-steps:
             - prepare-node-dockerfile-from-template:
                 step-name: Prepare edge Node variant Dockerfile from template
@@ -179,13 +179,13 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-edge-master
-          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
-          dockerfile: variant-node/Dockerfile
+          dockerfiles: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
+          artifacts-path: variant-node
           requires: [lint-ubuntu-edge-master]
 
       - cimg/build-test-deploy:
