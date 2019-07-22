@@ -13,15 +13,35 @@ LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partn
 # Set default shell for building image
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
-# Install Node
-RUN wget https://raw.githubusercontent.com/tj/n/641d6d0bbee7b30b005bb961c0f3b5686a7b305b/bin/n -O /usr/local/bin/n \
-	&& chmod +x /usr/local/bin/n \
-	&& n lts \
-	# test/verify version
-	&& command -v node \
-	&& command -v npm \
-	&& node --version | grep "$NODE_VERSION" \
-	&& npm --version
+# Install Node via latest stable release of  N
+RUN declare -i INDEX=0 \
+  # Determine latest stable N version
+  && while true; \
+    do INDEX=$(curl --show-error --location --fail --retry 3 \
+      https://api.github.com/repos/tj/n/releases | \
+      jq --argjson index "$INDEX" '.[$index]') \
+      # Filter out drafts & prereleases
+      && if [[ $(echo "$INDEX" | grep -v '"draft": true' | grep -v '"prerelease": true') ]]; then \
+      	INDEX_VERSION=$(echo "$INDEX" | jq '.tag_name') \
+        && N_VERSION="${INDEX_VERSION:1:$((${#INDEX_VERSION} - 1 - 1))}" \
+        && break; \
+      else \
+        INDEX=$((INDEX + 1)); \
+      fi; \
+    done \
+  # Download/install N
+  && curl --show-error --location --fail --retry 3 --output /usr/local/bin/n \
+    "https://raw.githubusercontent.com/tj/n/$N_VERSION/bin/n" \
+  && chmod +x /usr/local/bin/n \
+  # Test/verify N version
+  && command -v n \
+  && n --version | grep "${N_VERSION:1}" \
+  # Install LTS Node, verify versions
+  && n lts \
+  && command -v node \
+  && command -v npm \
+  && node --version \
+  && npm --version
 
 # Set default shell for users
 SHELL ["/bin/bash", "-c"]
