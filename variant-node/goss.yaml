@@ -9,6 +9,8 @@ command:
     exit-status: 0
   dockerize --version:
     exit-status: 0
+  n --version:
+    exit-status: 0
   node --version:
     exit-status: 0
   npm --version:
