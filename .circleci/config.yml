@@ -70,6 +70,7 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-monthly
+          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
@@ -124,6 +125,7 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-edge-dev
+          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
@@ -177,6 +179,7 @@ workflows:
 
       - docker/hadolint:
           name: lint-node-edge-master
+          pre-steps: [bt/install-ci-tools]
           checkout: false
           attach-workspace: true
           workspace-root: ~/
