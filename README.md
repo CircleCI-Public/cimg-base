@@ -49,6 +49,6 @@ Upon successful commits to non-master branches of this repository, this image an
 Monthly release tags can be manually re-published to patch vulnerabilities or severe bugs via a pushing a `git` tag matching the desired Docker tag.
 
 ### Contributing
-We welcome [issues](https://github.com/cimg/base/issues) to and [pull requests](https://github.com/cimg/base/pulls) against this repository!
+We welcome [issues](https://github.com/CircleCI-Public/cimg-base/issues) to and [pull requests](https://github.com/CircleCI-Public/cimg-base/pulls) against this repository!
 
 This image is maintained by the Community & Partner Engineering Team.
