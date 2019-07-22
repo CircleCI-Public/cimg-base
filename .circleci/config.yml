@@ -48,6 +48,10 @@ workflows:
           dockerfile: ubuntu/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
+          post-steps:
+            - prepare-node-dockerfile-from-template:
+                step-name: Prepare monthly Node variant Dockerfile from template
+                base-org-image-tag: "cimg/base:$( date +%Y.%m )"
 
       - cimg/build-test-deploy:
           name: ubuntu-monthly
@@ -62,10 +66,6 @@ workflows:
           publish-tags: stable,latest
           filters: *master-filters
           requires: [lint-ubuntu-monthly]
-          post-steps:
-            - prepare-node-dockerfile-from-template:
-                step-name: Prepare monthly Node variant Dockerfile from template
-                base-org-image-tag: "cimg/base:$( date +%Y.%m )"
 
       - docker/hadolint:
           name: lint-node-monthly
@@ -76,6 +76,7 @@ workflows:
           dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
+          requires: [lint-ubuntu-monthly]
 
       - cimg/build-test-deploy:
           name: node-monthly
@@ -92,7 +93,7 @@ workflows:
           deploy: true
           publish-tags: stable-node
           filters: *master-filters
-          requires: [lint-node-monthly]
+          requires: [ubuntu-monthly]
 
   commit-edge-dev:
     jobs:
@@ -101,6 +102,10 @@ workflows:
           dockerfile: ubuntu/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *dev-filters
+          post-steps:
+            - prepare-node-dockerfile-from-template:
+                step-name: Prepare ccitest/base Node variant Dockerfile from template
+                base-org-image-tag: "ccitest/base:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}"
 
       - cimg/build-test-deploy:
           name: ubuntu-edge-dev
@@ -115,10 +120,6 @@ workflows:
           publish-tags: latest
           filters: *dev-filters
           requires: [lint-ubuntu-edge-dev]
-          post-steps:
-            - prepare-node-dockerfile-from-template:
-                step-name: Prepare ccitest/base Node variant Dockerfile from template
-                base-org-image-tag: "ccitest/base:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7}"
 
       - docker/hadolint:
           name: lint-node-edge-dev
@@ -129,7 +130,7 @@ workflows:
           dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *dev-filters
-          requires: [ubuntu-edge-dev]
+          requires: [lint-ubuntu-edge-dev]
 
       - cimg/build-test-deploy:
           name: node-edge-dev
@@ -145,7 +146,7 @@ workflows:
           test-suite-name: variant-node
           deploy: true
           filters: *dev-filters
-          requires: [lint-node-edge-dev]
+          requires: [ubuntu-edge-dev]
 
   commit-edge-master:
     jobs:
@@ -154,6 +155,10 @@ workflows:
           dockerfile: ubuntu/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
+          post-steps:
+            - prepare-node-dockerfile-from-template:
+                step-name: Prepare edge Node variant Dockerfile from template
+                base-org-image-tag: cimg/base:edge
 
       - cimg/build-test-deploy:
           name: ubuntu-edge-master
@@ -168,10 +173,6 @@ workflows:
           publish-tags: latest
           filters: *master-filters
           requires: [lint-ubuntu-edge-master]
-          post-steps:
-            - prepare-node-dockerfile-from-template:
-                step-name: Prepare edge Node variant Dockerfile from template
-                base-org-image-tag: cimg/base:edge
 
       - docker/hadolint:
           name: lint-node-edge-master
@@ -182,7 +183,7 @@ workflows:
           dockerfile: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
           filters: *master-filters
-          requires: [ubuntu-edge-master]
+          requires: [lint-ubuntu-edge-master]
 
       - cimg/build-test-deploy:
           name: node-edge-master
@@ -198,4 +199,4 @@ workflows:
           test-suite-name: variant-node
           deploy: true
           filters: *master-filters
-          requires: [lint-node-edge-master]
+          requires: [ubuntu-edge-master]
