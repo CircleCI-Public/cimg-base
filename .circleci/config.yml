@@ -55,6 +55,7 @@ workflows:
           filters: *master-filters
 
   monthly-tag-jobs:
+    jobs:
       - docker/hadolint:
           name: lint-ubuntu-monthly
           dockerfiles: ubuntu/Dockerfile
