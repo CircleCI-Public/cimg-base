@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   bt: circleci/build-tools@2.6.3
-  cimg: cci-dev/cimg@0.0.19
+  cimg: cci-dev/cimg@0.0.20
   docker: circleci/docker@0.5.12
 
 dev-filters: &dev-filters
@@ -12,6 +12,12 @@ dev-filters: &dev-filters
 master-filters: &master-filters
   branches:
     only: master
+
+monthly-tag-jobs-filters: &monthly-tag-jobs-filters
+  branches:
+    ignore: /.*/
+  tags:
+    only: /monthly.*/
 
 lint-ignore-rules: &lint-ignore-rules
   DL3007,DL3008,DL3015,SC1072,SC1090,SC2013,SC2039,SC2143,SC2162,SC2027,SC2062,SC2086
@@ -40,14 +46,20 @@ workflows:
   monthly-cron:
     triggers:
       - schedule:
-          cron: "30 14 23 * *"
+          cron: "0 12 2 * *"
           filters: *master-filters
     jobs:
+      - cimg/trigger-monthly-tag-jobs:
+          context: image-publishing
+          ssh-fingerprints: d7:ef:4c:40:d5:df:1c:54:35:4b:d0:ca:10:3c:62:e9
+          filters: *master-filters
+
+  monthly-tag-jobs:
       - docker/hadolint:
           name: lint-ubuntu-monthly
           dockerfiles: ubuntu/Dockerfile
           ignore-rules: *lint-ignore-rules
-          filters: *master-filters
+          filters: *monthly-tag-jobs-filters
           artifacts-path: ubuntu
           post-steps:
             - prepare-node-dockerfile-from-template:
@@ -65,7 +77,7 @@ workflows:
           test-suite-name: ubuntu
           deploy: true
           publish-tags: stable,latest
-          filters: *master-filters
+          filters: *monthly-tag-jobs-filters
           requires: [lint-ubuntu-monthly]
 
       - docker/hadolint:
@@ -75,7 +87,7 @@ workflows:
           workspace-root: ~/
           dockerfiles: variant-node/Dockerfile
           ignore-rules: *lint-ignore-rules
-          filters: *master-filters
+          filters: *monthly-tag-jobs-filters
           artifacts-path: variant-node
           requires: [lint-ubuntu-monthly]
 
@@ -93,7 +105,7 @@ workflows:
           test-suite-name: variant-node
           deploy: true
           publish-tags: stable-node
-          filters: *master-filters
+          filters: *monthly-tag-jobs-filters
           requires: [ubuntu-monthly]
 
   commit-edge-dev:
