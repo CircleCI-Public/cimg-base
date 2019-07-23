@@ -13,6 +13,9 @@ LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partn
 # Set default shell for building image
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
+# Set n install dir
+ENV N_PREFIX /usr/local/bin
+
 # Install Node via latest stable release of  N
 RUN declare -i INDEX=0 \
   # Determine latest stable N version
