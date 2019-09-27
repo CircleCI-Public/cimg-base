@@ -2,8 +2,10 @@ version: 2.1
 
 workflows:
   monthly-release:
+    # Publishes the `YYYY.MM` tag as well as the `stable` tag
     triggers:
       - schedule:
+          # Monthly on the 2nd
           cron: "0 0 2 * *"
           filters:
             branches:
@@ -16,8 +18,9 @@ workflows:
           filters:
             branches:
               only: master
-          context: org-global
+          context: orb-publishing
   main:
+    # Always runs. When the master branch runs, publishes the `edge` Docker tag
     jobs:
       - test
       - publish-edge:
@@ -26,56 +29,58 @@ workflows:
           filters:
             branches:
               only: master
-          context: org-global
+          context: orb-publishing
 
-
-version: 2
 jobs:
   test:
     docker:
-      - image: docker:stable-git
+      - image: cibuilds/docker:18.09
     steps:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: "Make sure Dockerfile Builds"
-          command: docker build -t cibuilds/base:$CIRCLE_SHA1 .
-      # We need to run the image and test the tools we pre-install here in the future
+          name: "Build Dockerfiles"
+          command: ./build-images.sh
 
   publish-edge:
     docker:
-      - image: docker:stable-git
+      - image: cibuilds/docker:18.09
     steps:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
       - run:
-          name: "Build Docker Image"
-          command: docker build -t cibuilds/base:$CIRCLE_SHA1 .
-      - run:
-          name: "Prepare & Publish Image"
+          name: "Build & Tag Images"
           command: |
-            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:edge
-
-            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-            docker push cibuilds/base
+            ./build-images.sh
+            docker tag cimg/base:18.04 cimg/base:edge
+      - deploy:
+          name: "Publish Docker Images (master branch only)"
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              docker push cimg/base:edge
+            fi
 
   publish-monthly:
     docker:
-      - image: docker:stable-git
+      - image: cibuilds/docker:18.09
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: "Build Docker Image"
-          command: docker build --pull -t cibuilds/base:$CIRCLE_SHA1 .
-      - run:
-          name: "Prepare & Publish Image"
+          name: "Build & Tag Images"
           command: |
+            ./build-images.sh
+            docker tag cimg/base:18.04 cimg/base:stable
             VERSION=$( date +%Y.%m )
-            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:latest
-            docker tag cibuilds/base:$CIRCLE_SHA1 cibuilds/base:${VERSION}
-
-            echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
-            docker push cibuilds/base
+            docker tag cimg/base:18.04 cibuilds/base:${VERSION}
+      - deploy:
+          name: "Publish Docker Images (master branch only)"
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              docker push cimg/base:stable
+              docker push cimg/base:${VERSION}
+            fi

@@ -1,7 +1,7 @@
 # The Node.js variant of the base image.
-FROM circleciimages/base
+FROM cimg/base:stable
 
-LABEL maintainer="CircleCI <support@circleci.com>"
+LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
 
 ENV NVM_VERSION 0.34.0
 

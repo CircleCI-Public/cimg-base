@@ -1,4 +1,3 @@
 #!/usr/bin/env bash
 
-docker build --file=ubuntu/Dockerfile -t circleciimages/base:latest .
-docker build --file=variant-node/Dockerfile -t circleciimages/base:node .
+docker build --file 18.04/Dockerfile -t cimg/base:18.04 .

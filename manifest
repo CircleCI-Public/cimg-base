@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+repository=base
+parent=ubuntu
+variants=(node)

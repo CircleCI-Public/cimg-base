@@ -1,0 +1,68 @@
+# vim:set ft=dockerfile:
+
+FROM %%PARENT%%:%%MAIN_VERSION%%
+
+LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
+
+# Change default shell from Dash to Bash
+# verify below command
+#SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
+SHELL ["/usr/bin/env", "bash", "-exo", "pipefail", "-c"]
+
+ENV PATH $HOME/bin:$HOME/.local/bin:$PATH
+
+RUN apt-get update && apt-get install -y \
+		build-essential \
+		ca-certificates \
+		curl \
+		git \
+		gnupg \
+		gzip \
+		jq \
+		locales \
+		make \
+		net-tools \
+		netcat \
+		openssh-client \
+		parallel \
+		tar \
+		unzip \
+		wget \
+		zip && \
+	rm -rf /var/lib/apt/lists/*
+
+# Install Docker - needs the setup_remote_docker CircleCI step to work
+ENV DOCKER_VERSION 5:19.03.2~3-0~ubuntu-bionic
+RUN apt-get update && apt-get install -y \
+		apt-transport-https \
+		ca-certificates \
+		curl \
+		gnupg-agent \
+		software-properties-common && \
+	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
+	add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
+	apt-get install -y docker-ce=${DOCKER_VERSION} docker-ce-cli=${DOCKER_VERSION} containerd.io && \
+	# Quick test of the Docker install
+	docker --version && \
+	rm -rf /var/lib/apt/lists/*
+
+# Install Docker Compose - see prerequisite above
+ENV COMPOSE_VERSION 1.24.1
+RUN curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+	chmod +x /usr/local/bin/docker-compose && \
+	# Quick test of the Docker Compose install
+	docker-compose version
+
+# Install Dockerize v0.6.1
+# Source repo: https://github.com/jwilder/dockerize
+RUN curl -sSL --fail --retry 3 --output /tmp/dockerize-linux-amd64.tar.gz "https://circle-downloads.s3.amazonaws.com/circleci-images/cache/linux-amd64/dockerize-latest.tar.gz" && \
+	tar -C /usr/local/bin -xzvf /tmp/dockerize-linux-amd64.tar.gz && \
+	rm -rf /tmp/dockerize-linux-amd64.tar.gz && \
+	# Quick test of Dockerize
+	dockerize --version
+
+# Set default shell for users
+SHELL ["/bin/bash", "-c"]
+
+# Match the default CircleCI working directory
+WORKDIR /root/project
