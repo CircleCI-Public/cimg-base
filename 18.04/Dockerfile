@@ -9,7 +9,8 @@ LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partn
 #SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 SHELL ["/usr/bin/env", "bash", "-exo", "pipefail", "-c"]
 
-ENV PATH $HOME/bin:$HOME/.local/bin:$PATH
+ENV DEBIAN_FRONTEND	noninteractive
+ENV PATH			$HOME/bin:$HOME/.local/bin:$PATH
 
 RUN apt-get update && apt-get install -y \
 		build-essential \
@@ -25,6 +26,7 @@ RUN apt-get update && apt-get install -y \
 		netcat \
 		openssh-client \
 		parallel \
+		software-properties-common \
 		tar \
 		unzip \
 		wget \
