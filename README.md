@@ -16,7 +16,7 @@ You can also use this image directly in CircleCI if you need a light-weight imag
 
 ## Variants
 
-Currently, there is only a Node variant of this image. The Node variant includes the latest LTS version of Node, [installed via the `n` Node version manager](https://github.com/tj/n). To use a different Node version, see [Installing/Activating Node Versions](https://github.com/tj/n#installingactivating-node-versions), or use [CircleCI's Node orb](http://circleci.com/orbs/registry/orb/circleci/node#commands-install-node) to manually install a different version of Node. See below for explanation of specific `-node` (and other) tags.
+Currently, there is only a Node variant of this image. The Node variant includes the latest LTS version of Node, [installed via the `nvm` Node version manager](https://github.com/tj/n). To use a different Node version, see [Installing/Activating Node Versions](https://github.com/tj/n#installingactivating-node-versions), or use [CircleCI's Node orb](http://circleci.com/orbs/registry/orb/circleci/node#commands-install-node) to manually install a different version of Node. See below for explanation of specific `-node` (and other) tags.
 
 ## Tags
 
@@ -46,7 +46,7 @@ Working on CircleCI Docker Images.
 Upon successful commits to non-master branches of this repository, this image and its Node variant will be pushed to `ccitest/base` for any requisite post-deployment testing. Tags there will represent the branch and commit hash that triggered them. For example, a successful commit to a branch of this repository called `dev` would result in the creation of the following image/tag: `ccitest/base:dev-${CIRCLE_SHA1:0:7}"`, where `${CIRCLE_SHA1:0:7}"` represents the first six characters of that particular commit hash.
 
 ### Patching bugs and vulnerabilities
-Monthly release tags can be manually re-published to patch vulnerabilities or severe bugs via a pushing a `git` tag that contains the string `monthly`. This tag will trigger a workflow that will rebuild all current `<year>.<month>` and `<year>.<month>-node` tags, as well as the `stable`, `stable-node`, and `latest` alias tags.
+Monthly release tags can be manually re-published to patch vulnerabilities or severe bugs via pushing a `git` tag that contains the string `monthly`. This tag will trigger a workflow that will rebuild all current `<year>.<month>` and `<year>.<month>-node` tags, as well as the `stable`, `stable-node`, and `latest` alias tags.
 
 ### Contributing
 We welcome [issues](https://github.com/CircleCI-Public/cimg-base/issues) to and [pull requests](https://github.com/CircleCI-Public/cimg-base/pulls) against this repository!
