@@ -75,12 +75,13 @@ jobs:
             ./build-images.sh
             docker tag cimg/base:18.04 cimg/base:stable
             VERSION=$( date +%Y.%m )
-            docker tag cimg/base:18.04 cibuilds/base:${VERSION}
+            docker tag cimg/base:18.04 cimg/base:${VERSION}
       - deploy:
           name: "Publish Docker Images (master branch only)"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
               echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
               docker push cimg/base:stable
+              VERSION=$( date +%Y.%m )
               docker push cimg/base:${VERSION}
             fi
