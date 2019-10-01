@@ -10,6 +10,7 @@ LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partn
 SHELL ["/usr/bin/env", "bash", "-exo", "pipefail", "-c"]
 
 ENV DEBIAN_FRONTEND	noninteractive
+ENV HOME			/root
 ENV PATH			$HOME/bin:$HOME/.local/bin:$PATH
 
 RUN apt-get update && apt-get install -y \
