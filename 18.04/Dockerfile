@@ -9,11 +9,21 @@ LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partn
 #SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 SHELL ["/usr/bin/env", "bash", "-exo", "pipefail", "-c"]
 
-ENV DEBIAN_FRONTEND	noninteractive
-ENV HOME			/root
-ENV PATH			$HOME/bin:$HOME/.local/bin:$PATH
+ENV DEBIAN_FRONTEND=noninteractive \
+	HOME=/root
+
+# Generate locale and encoding
+RUN apt-get update && apt-get install -y locales && \
+	locale-gen en_US.UTF-8 && \
+	rm -rf /var/lib/apt/lists/*
+
+ENV PATH=$HOME/bin:$HOME/.local/bin:$PATH \
+	LANG=en_US.UTF-8 \
+	LANGUAGE=en_US:en \
+	LC_ALL=en_US.UTF-8
 
 RUN apt-get update && apt-get install -y \
+		autoconf \
 		build-essential \
 		ca-certificates \
 		curl \
@@ -21,7 +31,6 @@ RUN apt-get update && apt-get install -y \
 		gnupg \
 		gzip \
 		jq \
-		locales \
 		make \
 		net-tools \
 		netcat \
