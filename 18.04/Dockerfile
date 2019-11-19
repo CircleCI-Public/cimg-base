@@ -59,7 +59,7 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
-ENV COMPOSE_VERSION 1.24.1
+ENV COMPOSE_VERSION 1.25.0
 RUN curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
 	chmod +x /usr/local/bin/docker-compose && \
 	# Quick test of the Docker Compose install
