@@ -34,11 +34,10 @@ workflows:
 jobs:
   test:
     docker:
-      - image: cibuilds/docker:18.09
+      - image: cibuilds/docker:19.03
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - setup_remote_docker
       - run:
           name: "Build Dockerfiles"
           command: ./build-images.sh
@@ -58,11 +57,10 @@ jobs:
 
   publish-edge:
     docker:
-      - image: cibuilds/docker:18.09
+      - image: cibuilds/docker:19.03
     steps:
       - checkout
-      - setup_remote_docker:
-          docker_layer_caching: true
+      - setup_remote_docker
       - run:
           name: "Build & Tag Images"
           command: |
@@ -78,7 +76,7 @@ jobs:
 
   publish-monthly:
     docker:
-      - image: cibuilds/docker:18.09
+      - image: cibuilds/docker:19.03
     steps:
       - checkout
       - setup_remote_docker
