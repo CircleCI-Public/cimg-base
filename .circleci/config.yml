@@ -22,7 +22,8 @@ workflows:
   main:
     # Always runs. When the master branch runs, publishes the `edge` Docker tag
     jobs:
-      - test
+      - test:
+          context: orb-publishing
       - publish-edge:
           requires:
             - test
@@ -45,6 +46,7 @@ jobs:
           name: "Publish Docker Hub Description (master branch only)"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
+             
               echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
 
               # Update the Docker Hub description
