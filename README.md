@@ -1,8 +1,8 @@
 <div align="center">
 	<p>
-		<img alt="CircleCI Logo" src="img/circle-circleci.svg" width="75" />
-		<img alt="Docker Logo" src="img/circle-docker.svg" width="75" />
-		<img alt="Ubuntu Logo" src="img/circle-ubuntu.svg" width="75" />
+		<img alt="CircleCI Logo" src="https://raw.github.com/CircleCI-Public/cimg-base/master/img/circle-circleci.svg?sanitize=true" width="75" />
+		<img alt="Docker Logo" src="https://raw.github.com/CircleCI-Public/cimg-base/master/img/circle-docker.svg?sanitize=true" width="75" />
+		<img alt="Ubuntu Logo" src="https://raw.github.com/CircleCI-Public/cimg-base/master/img/circle-ubuntu.svg?sanitize=true" width="75" />
 	</p>
 	<h1>CircleCI Convenience Images => Base</h1>
 	<h3>A Continous Integration focused Ubuntu Docker image built to run on CircleCI</h3>
