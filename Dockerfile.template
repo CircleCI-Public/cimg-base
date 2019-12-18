@@ -73,6 +73,10 @@ RUN curl -sSL --fail --retry 3 --output /tmp/dockerize-linux-amd64.tar.gz "https
 	# Quick test of Dockerize
 	dockerize --version
 
+# Add sudo command alias 
+RUN echo 'alias sudo=""' >> /root/.bashrc
+RUN echo 'alias SUDO=""' >> /root/.bashrc
+
 # Set default shell for users
 SHELL ["/bin/bash", "-c"]
 
