@@ -11,7 +11,8 @@ workflows:
             branches:
               only: master
     jobs:
-      - test
+      - test:
+          context: orb-publishing
       - publish-monthly:
           requires:
             - test
