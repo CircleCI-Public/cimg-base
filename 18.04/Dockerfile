@@ -2,22 +2,19 @@
 
 FROM ubuntu:18.04
 
-LABEL maintainer="CircleCI Community & Partner Engineering Team <community-partner@circleci.com>"
+LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
 
-# Change default shell from Dash to Bash
-# verify below command
-#SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
-SHELL ["/usr/bin/env", "bash", "-exo", "pipefail", "-c"]
+# Change default shell for RUN from Dash to Bash
+SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
-ENV DEBIAN_FRONTEND=noninteractive \
-	HOME=/root
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Generate locale and encoding
 RUN apt-get update && apt-get install -y locales && \
 	locale-gen en_US.UTF-8 && \
 	rm -rf /var/lib/apt/lists/*
 
-ENV PATH=$HOME/bin:$HOME/.local/bin:$PATH \
+ENV PATH=/home/circleci/bin:/home/circleci/.local/bin:$PATH \
 	LANG=en_US.UTF-8 \
 	LANGUAGE=en_US:en \
 	LC_ALL=en_US.UTF-8
@@ -37,6 +34,7 @@ RUN apt-get update && apt-get install -y \
 		openssh-client \
 		parallel \
 		software-properties-common \
+		sudo \
 		tar \
 		unzip \
 		wget \
@@ -73,8 +71,10 @@ RUN curl -sSL --fail --retry 3 --output /tmp/dockerize-linux-amd64.tar.gz "https
 	# Quick test of Dockerize
 	dockerize --version
 
-# Set default shell for users
-SHELL ["/bin/bash", "-c"]
+RUN useradd --uid=3434 --user-group --create-home circleci && \
+	echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci && \
+	echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
+USER circleci
 
 # Match the default CircleCI working directory
-WORKDIR /root/project
+WORKDIR /home/circleci/project
