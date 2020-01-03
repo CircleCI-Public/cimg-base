@@ -32,6 +32,25 @@ workflows:
             branches:
               only: master
           context: orb-publishing
+  manual-monthly:
+    # Used to respin this month's snapshot
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /^monthly$/
+            branches:
+              ignore: /.*/
+          context: orb-publishing
+      - publish-monthly:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /^monthly$/
+            branches:
+              ignore: /.*/
+          context: orb-publishing
 
 jobs:
   test:
