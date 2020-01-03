@@ -73,7 +73,8 @@ RUN curl -sSL --fail --retry 3 --output /tmp/dockerize-linux-amd64.tar.gz "https
 
 RUN useradd --uid=3434 --user-group --create-home circleci && \
 	echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci && \
-	echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
+	echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep && \
+	sudo -u circleci mkdir /home/circleci/project
 USER circleci
 
 # Match the default CircleCI working directory
