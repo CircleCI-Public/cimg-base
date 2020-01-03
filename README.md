@@ -194,6 +194,12 @@ git commit -m "Updating submodule for foo."
 **Base specific changes** - Editing the `Dockerfile.template` file in this repo is how to modify the Go image specifically.
 Don't forget that to see any of these changes locally, the `gen-dockerfiles.sh` script will need to be run again (see above).
 
+### Fixing a Monthly Snapshot
+
+You can respin (re-release) a monthly snapshot where there's a serious bug or security issue.
+This can be done by tagging a commit as `monthly`.
+This will re-create the monthly snapshot for the current month.
+
 
 ## Contributing
 

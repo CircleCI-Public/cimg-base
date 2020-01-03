@@ -32,6 +32,25 @@ workflows:
             branches:
               only: master
           context: orb-publishing
+  manual-monthly:
+    # Used to respin this month's snapshot
+    jobs:
+      - test:
+          filters:
+            tags:
+              only: /^monthly$/
+            branches:
+              ignore: /.*/
+          context: orb-publishing
+      - publish-monthly:
+          requires:
+            - test
+          filters:
+            tags:
+              only: /^monthly$/
+            branches:
+              ignore: /.*/
+          context: orb-publishing
 
 jobs:
   test:
@@ -94,6 +113,11 @@ jobs:
           name: "Publish Docker Images (master branch only)"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              docker push cimg/base:stable
+              VERSION=$( date +%Y.%m )
+              docker push cimg/base:${VERSION}
+            elif [ "${CIRCLE_TAG}" == "monthly" ]; then
               echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
               docker push cimg/base:stable
               VERSION=$( date +%Y.%m )
