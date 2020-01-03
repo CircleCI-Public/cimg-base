@@ -75,6 +75,7 @@ RUN useradd --uid=3434 --user-group --create-home circleci && \
 	echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci && \
 	echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep
 USER circleci
+RUN mkdir -p /home/circleci/project
 
 # Match the default CircleCI working directory
 WORKDIR /home/circleci/project
