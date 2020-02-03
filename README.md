@@ -37,16 +37,16 @@ For example:
 jobs:
   build:
     docker:
-      - image: cimg/base:stable
+      - image: cimg/base:2020.01
     steps:
       - checkout
       # Whatever you want to do
-      - run: apt-get update && apt-get install -y cowsay
+      - run: sudo apt-get update && sudo apt-get install -y cowsay
       - run: cowsay Continuous Integration Rocks!
 ```
 
 In the above example, the CircleCI Base Docker image is used for the primary container.
-More specifically, the tag `stable` indicates that the version of the base image used will be the most recent monthly release.
+More specifically, the tag `2020.01` indicates that the version of the base image used will be the January 2020 release.
 See how tags work below for more information.
 
 
