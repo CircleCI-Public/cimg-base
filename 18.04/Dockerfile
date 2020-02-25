@@ -9,8 +9,10 @@ SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Generate locale and encoding
-RUN apt-get update && apt-get install -y locales && \
+# COnfigure environment
+RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
+	echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90circleci && \
+	apt-get update && apt-get install -y locales && \
 	locale-gen en_US.UTF-8 && \
 	rm -rf /var/lib/apt/lists/*
 
