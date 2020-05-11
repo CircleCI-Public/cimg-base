@@ -30,6 +30,12 @@ RUN apt-get update && apt-get install -y \
 		gnupg \
 		gzip \
 		jq \
+		# popular DB lib - MariaDB
+		libmariadb-dev \
+		# allows MySQL users to use MariaDB lib
+		libmariadb-dev-compat \
+		# popular DB lib - PostgreSQL
+		libpq-dev \
 		make \
 		net-tools \
 		netcat \
