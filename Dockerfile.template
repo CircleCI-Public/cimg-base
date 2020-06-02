@@ -37,6 +37,8 @@ RUN apt-get update && apt-get install -y \
 		# popular DB lib - PostgreSQL
 		libpq-dev \
 		make \
+		# for ssh-enabled builds
+		nano \
 		net-tools \
 		netcat \
 		openssh-client \
@@ -46,6 +48,8 @@ RUN apt-get update && apt-get install -y \
 		tar \
 		tzdata \
 		unzip \
+		# for ssh-enabled builds
+		vim \
 		wget \
 		zip && \
 	rm -rf /var/lib/apt/lists/*
