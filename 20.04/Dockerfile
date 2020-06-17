@@ -1,6 +1,6 @@
 # vim:set ft=dockerfile:
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
 
