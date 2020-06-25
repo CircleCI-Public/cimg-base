@@ -2,4 +2,4 @@
 
 repository=base
 parent=ubuntu
-variants=(node)
+variants=()
