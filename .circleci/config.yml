@@ -87,7 +87,7 @@ jobs:
           name: "Build & Tag Images"
           command: |
             ./build-images.sh
-            docker tag cimg/base:18.04 cimg/base:edge
+            docker tag cimg/base:20.04 cimg/base:edge
             docker tag cimg/base:18.04 cimg/base:edge-18.04
             docker tag cimg/base:20.04 cimg/base:edge-20.04
       - deploy:
@@ -110,11 +110,11 @@ jobs:
           name: "Build & Tag Images"
           command: |
             ./build-images.sh
-            docker tag cimg/base:18.04 cimg/base:stable
+            docker tag cimg/base:20.04 cimg/base:stable
             docker tag cimg/base:18.04 cimg/base:stable-18.04
             docker tag cimg/base:20.04 cimg/base:stable-20.04
             VERSION=$( date +%Y.%m )
-            docker tag cimg/base:18.04 cimg/base:${VERSION}
+            docker tag cimg/base:20.04 cimg/base:${VERSION}
             docker tag cimg/base:18.04 cimg/base:${VERSION}-18.04
             docker tag cimg/base:20.04 cimg/base:${VERSION}-20.04
       - deploy:
