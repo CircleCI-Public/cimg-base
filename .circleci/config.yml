@@ -12,26 +12,26 @@ workflows:
               only: master
     jobs:
       - test:
-          context: orb-publishing
+          context: cimg-publishing
       - publish-monthly:
           requires:
             - test
           filters:
             branches:
               only: master
-          context: orb-publishing
+          context: cimg-publishing
   main:
     # Always runs. When the master branch runs, publishes the `edge` Docker tag
     jobs:
       - test:
-          context: orb-publishing
+          context: cimg-publishing
       - publish-edge:
           requires:
             - test
           filters:
             branches:
               only: master
-          context: orb-publishing
+          context: cimg-publishing
   manual-monthly:
     # Used to respin this month's snapshot
     jobs:
@@ -41,7 +41,7 @@ workflows:
               only: /^monthly$/
             branches:
               ignore: /.*/
-          context: orb-publishing
+          context: cimg-publishing
       - publish-monthly:
           requires:
             - test
@@ -50,7 +50,7 @@ workflows:
               only: /^monthly$/
             branches:
               ignore: /.*/
-          context: orb-publishing
+          context: cimg-publishing
 
 jobs:
   test:
@@ -61,13 +61,15 @@ jobs:
       - setup_remote_docker
       - run:
           name: "Build Dockerfiles"
-          command: ./build-images.sh
+          command: |
+            ./build-images.sh
+            echo 'export DOCKER_PASS=$DOCKER_TOKEN' >> $BASH_ENV
       - run:
           name: "Publish Docker Hub Description (master branch only)"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
              
-              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
 
               # Update the Docker Hub description
               STUBB_VER=0.2.0
@@ -94,7 +96,7 @@ jobs:
           name: "Publish Docker Images (master branch only)"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
               docker push cimg/base:edge
               docker push cimg/base:edge-18.04
               docker push cimg/base:edge-20.04
@@ -121,7 +123,7 @@ jobs:
           name: "Publish Docker Images (master branch only)"
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
               docker push cimg/base:stable
               docker push cimg/base:stable-18.04
               docker push cimg/base:stable-20.04
@@ -130,7 +132,7 @@ jobs:
               docker push cimg/base:${VERSION}-18.04
               docker push cimg/base:${VERSION}-20.04
             elif [ "${CIRCLE_TAG}" == "monthly" ]; then
-              echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+              echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
               docker push cimg/base:stable
               docker push cimg/base:stable-18.04
               docker push cimg/base:stable-20.04
