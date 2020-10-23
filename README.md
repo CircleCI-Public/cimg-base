@@ -46,7 +46,7 @@ jobs:
 ```
 
 In the above example, the CircleCI Base Docker image is used for the primary container.
-More specifically, the tag `2020.01` indicates that the version of the base image used will be the January 2020 release.
+More specifically, the tag `2020.01` indicates the dated version of the base image.
 See how tags work below for more information.
 
 
