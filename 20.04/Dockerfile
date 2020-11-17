@@ -9,7 +9,7 @@ SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# COnfigure environment
+# Configure environment
 RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90circleci && \
 	apt-get update && apt-get install -y locales && \
@@ -43,6 +43,8 @@ RUN apt-get update && apt-get install -y \
 		netcat \
 		openssh-client \
 		parallel \
+		# compiling tool
+		pkg-config \
 		software-properties-common \
 		sudo \
 		tar \
