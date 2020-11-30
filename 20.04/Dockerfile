@@ -12,9 +12,28 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Configure environment
 RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	echo 'DPkg::Options "--force-confnew";' >> /etc/apt/apt.conf.d/90circleci && \
-	apt-get update && apt-get install -y locales && \
+	apt-get update && apt-get install -y \
+		curl \
+		locales \
+		sudo \
+	&& \
 	locale-gen en_US.UTF-8 && \
-	rm -rf /var/lib/apt/lists/*
+	rm -rf /var/lib/apt/lists/* && \
+
+	useradd --uid=3434 --user-group --create-home circleci && \
+	echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci && \
+	echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep && \
+	sudo -u circleci mkdir /home/circleci/project && \
+
+	# Install Dockerize v0.6.1
+	# Source repo: https://github.com/jwilder/dockerize
+	# I (Ricardo) would like to replace this one day. It's a tool not really
+	# maintained and we can likely offer something better.
+	curl -sSL --fail --retry 3 --output /tmp/dockerize-linux-amd64.tar.gz "https://circle-downloads.s3.amazonaws.com/circleci-images/cache/linux-amd64/dockerize-latest.tar.gz" && \
+	tar -C /usr/local/bin -xzvf /tmp/dockerize-linux-amd64.tar.gz && \
+	rm -rf /tmp/dockerize-linux-amd64.tar.gz && \
+	# Quick test of Dockerize
+	dockerize --version
 
 ENV PATH=/home/circleci/bin:/home/circleci/.local/bin:$PATH \
 	LANG=en_US.UTF-8 \
@@ -25,6 +44,7 @@ RUN apt-get update && apt-get install -y \
 		autoconf \
 		build-essential \
 		ca-certificates \
+		# already installed but hear for consistency
 		curl \
 		git \
 		gnupg \
@@ -46,6 +66,7 @@ RUN apt-get update && apt-get install -y \
 		# compiling tool
 		pkg-config \
 		software-properties-common \
+		# already installed but hear for consistency
 		sudo \
 		tar \
 		tzdata \
@@ -78,18 +99,6 @@ RUN curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSI
 	# Quick test of the Docker Compose install
 	docker-compose version
 
-# Install Dockerize v0.6.1
-# Source repo: https://github.com/jwilder/dockerize
-RUN curl -sSL --fail --retry 3 --output /tmp/dockerize-linux-amd64.tar.gz "https://circle-downloads.s3.amazonaws.com/circleci-images/cache/linux-amd64/dockerize-latest.tar.gz" && \
-	tar -C /usr/local/bin -xzvf /tmp/dockerize-linux-amd64.tar.gz && \
-	rm -rf /tmp/dockerize-linux-amd64.tar.gz && \
-	# Quick test of Dockerize
-	dockerize --version
-
-RUN useradd --uid=3434 --user-group --create-home circleci && \
-	echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci && \
-	echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep && \
-	sudo -u circleci mkdir /home/circleci/project
 USER circleci
 
 # Match the default CircleCI working directory
