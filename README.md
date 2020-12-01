@@ -37,7 +37,7 @@ For example:
 jobs:
   build:
     docker:
-      - image: cimg/base:2020.01
+      - image: cimg/base:2020.12
     steps:
       - checkout
       # Whatever you want to do
@@ -46,7 +46,7 @@ jobs:
 ```
 
 In the above example, the CircleCI Base Docker image is used for the primary container.
-More specifically, the tag `2020.01` indicates the dated version of the base image.
+More specifically, the tag `2020.12` indicates the dated version of the base image.
 See how tags work below for more information.
 
 
