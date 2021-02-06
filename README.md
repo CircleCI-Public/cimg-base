@@ -90,7 +90,7 @@ There can be up to two options, the current LTS and the previous LTS.
 As of this writing, those options would be `18.04` or `20.04`.
 When leaving the version out, suggested, the default version will be used.
 The default Ubuntu version is the newest LTS version, after it has been out for 2 months.
-For example, Ubuntu 20.04 came out in April 2020, so it will become the default version for this image September 2020.
+For example, Ubuntu 20.04 came out in April 2020, so it became the default version for this image in June 2020.
 The previous LTS version will be supported for a year after it drops out of the default slot.
 
 
