@@ -58,7 +58,8 @@ jobs:
       - image: cibuilds/docker:19.03
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.2
       - run:
           name: "Build Dockerfiles"
           command: |
@@ -84,7 +85,8 @@ jobs:
       - image: cibuilds/docker:19.03
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.2
       - run:
           name: "Build & Tag Images"
           command: |
@@ -107,7 +109,8 @@ jobs:
       - image: cibuilds/docker:19.03
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          version: 20.10.2
       - run:
           name: "Build & Tag Images"
           command: |
