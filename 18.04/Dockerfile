@@ -72,7 +72,7 @@ RUN apt-get update && apt-get install -y \
 		tzdata \
 		unzip \
 		# for ssh-enabled builds
-		vim \
+		vim-tiny \
 		wget \
 		zip && \
 	rm -rf /var/lib/apt/lists/*
