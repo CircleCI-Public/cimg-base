@@ -78,7 +78,7 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
-ENV DOCKER_VERSION 5:20.10.4~3-0~ubuntu-
+ENV DOCKER_VERSION 5:20.10.5~3-0~ubuntu-
 RUN apt-get update && apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
