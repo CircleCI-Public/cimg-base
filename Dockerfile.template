@@ -99,6 +99,10 @@ RUN curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSI
 	# Quick test of the Docker Compose install
 	docker-compose version
 
+RUN curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.6.3/yq_linux_amd64.tar.gz" | \
+	tar -xz -C /usr/local/bin && \
+	mv /usr/local/bin/yq{_linux_amd64,}
+
 USER circleci
 
 # Match the default CircleCI working directory
