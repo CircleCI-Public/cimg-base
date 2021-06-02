@@ -74,7 +74,8 @@ RUN apt-get update && apt-get install -y \
 		# for ssh-enabled builds
 		vim-tiny \
 		wget \
-		zip && \
+		zip \
+		zstd && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
