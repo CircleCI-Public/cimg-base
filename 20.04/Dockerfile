@@ -42,6 +42,7 @@ ENV PATH=/home/circleci/bin:/home/circleci/.local/bin:$PATH \
 
 RUN apt-get update && apt-get install -y \
 		autoconf \
+		amazon-ecr-credential-helper \
 		build-essential \
 		ca-certificates \
 		# already installed but hear for consistency
