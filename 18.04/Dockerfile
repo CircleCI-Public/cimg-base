@@ -44,9 +44,8 @@ RUN apt-get update && apt-get install -y \
 		autoconf \
 		build-essential \
 		ca-certificates \
-		# already installed but hear for consistency
+		# already installed but here for consistency
 		curl \
-		git \
 		gnupg \
 		gzip \
 		jq \
@@ -75,6 +74,7 @@ RUN apt-get update && apt-get install -y \
 		vim-tiny \
 		wget \
 		zip && \
+	add-apt-repository ppa:git-core/ppa && apt-get install -y git && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
