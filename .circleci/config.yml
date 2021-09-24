@@ -9,7 +9,7 @@ workflows:
           cron: "0 0 2 * *"
           filters:
             branches:
-              only: master
+              only: main
     jobs:
       - test:
           context: cimg-publishing
@@ -18,10 +18,10 @@ workflows:
             - test
           filters:
             branches:
-              only: master
+              only: main
           context: cimg-publishing
   main:
-    # Always runs. When the master branch runs, publishes the `edge` Docker tag
+    # Always runs. When the main branch runs, publishes the `edge` Docker tag
     jobs:
       - test:
           context: cimg-publishing
@@ -30,7 +30,7 @@ workflows:
             - test
           filters:
             branches:
-              only: master
+              only: main
           context: cimg-publishing
   manual-monthly:
     # Used to respin this month's snapshot
@@ -66,9 +66,9 @@ jobs:
             ./build-images.sh
             echo 'export DOCKER_PASS=$DOCKER_TOKEN' >> $BASH_ENV
       - run:
-          name: "Publish Docker Hub Description (master branch only)"
+          name: "Publish Docker Hub Description (main branch only)"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
              
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
 
@@ -95,9 +95,9 @@ jobs:
             docker tag cimg/base:18.04 cimg/base:edge-18.04
             docker tag cimg/base:20.04 cimg/base:edge-20.04
       - deploy:
-          name: "Publish Docker Images (master branch only)"
+          name: "Publish Docker Images (main branch only)"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
               docker push cimg/base:edge
               docker push cimg/base:edge-18.04
@@ -123,9 +123,9 @@ jobs:
             docker tag cimg/base:18.04 cimg/base:${VERSION}-18.04
             docker tag cimg/base:20.04 cimg/base:${VERSION}-20.04
       - deploy:
-          name: "Publish Docker Images (master branch only)"
+          name: "Publish Docker Images (main branch only)"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
               docker push cimg/base:stable
               docker push cimg/base:stable-18.04
