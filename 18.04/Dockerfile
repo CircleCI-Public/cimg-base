@@ -97,11 +97,12 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
-ENV COMPOSE_VERSION 1.29.2
-RUN curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
-	chmod +x /usr/local/bin/docker-compose && \
+ENV COMPOSE_VERSION 2.2.2
+RUN mkdir -p ~/.docker/cli-plugins/ && \
+	curl -sSL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/.docker/cli-plugins/docker-compose && \
+	chmod +x ~/.docker/cli-plugins/docker-compose && \
 	# Quick test of the Docker Compose install
-	docker-compose version
+	docker compose version
 
 RUN curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.13.3/yq_linux_amd64.tar.gz" | \
 	tar -xz -C /usr/local/bin && \
