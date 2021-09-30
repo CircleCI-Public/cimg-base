@@ -1,14 +1,14 @@
 <div align="center">
 	<p>
-		<img alt="CircleCI Logo" src="https://raw.github.com/CircleCI-Public/cimg-base/master/img/circle-circleci.svg?sanitize=true" width="75" />
-		<img alt="Docker Logo" src="https://raw.github.com/CircleCI-Public/cimg-base/master/img/circle-docker.svg?sanitize=true" width="75" />
-		<img alt="Ubuntu Logo" src="https://raw.github.com/CircleCI-Public/cimg-base/master/img/circle-ubuntu.svg?sanitize=true" width="75" />
+		<img alt="CircleCI Logo" src="https://raw.github.com/CircleCI-Public/cimg-base/main/img/circle-circleci.svg?sanitize=true" width="75" />
+		<img alt="Docker Logo" src="https://raw.github.com/CircleCI-Public/cimg-base/main/img/circle-docker.svg?sanitize=true" width="75" />
+		<img alt="Ubuntu Logo" src="https://raw.github.com/CircleCI-Public/cimg-base/main/img/circle-ubuntu.svg?sanitize=true" width="75" />
 	</p>
 	<h1>CircleCI Convenience Images => Base</h1>
 	<h3>A Continous Integration focused Ubuntu Docker image built to run on CircleCI</h3>
 </div>
 
-[![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/cimg-base.svg?style=shield)](https://circleci.com/gh/CircleCI-Public/cimg-base) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/cimg-base/master/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/cimg/base)](https://hub.docker.com/r/cimg/base) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/circleci-images)
+[![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/cimg-base.svg?style=shield)](https://circleci.com/gh/CircleCI-Public/cimg-base) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/cimg-base/main/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/cimg/base)](https://hub.docker.com/r/cimg/base) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/circleci-images)
 
 `cimg/base` is an Ubuntu Docker image created by CircleCI with continuous integration builds in mind.
 As its name suggests, this image is designed to serve as a base image for other CircleCI Convenience Images (images prefixed with `cimg/`).
@@ -73,7 +73,7 @@ cimg/base:<YYYY.MM>[-version]
 ```
 
 `edge` - This image tag points to the latest version of the Base image.
-This tag is built from the `HEAD` of the `master` branch.
+This tag is built from the `HEAD` of the `main` branch.
 The `edge` tag is intended to be used as a testing version of the image with the most recent changes however not guaranteed to be all that stable.
 This tag is not recommended for production software.
 
@@ -180,7 +180,7 @@ All that would need to be done after that is:
 - review the PR
 - merge the PR
 
-The master branch build will then publish a release.
+The main branch build will then publish a release.
 `edge` will be updated immediately with the LTS change occurring during the next monthly release.
 
 ### Incorporating Changes
