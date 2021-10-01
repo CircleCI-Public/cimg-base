@@ -1,26 +1,36 @@
 version: 2.1
 
+parameters:
+  cron:
+    type: boolean
+    default: false
+
 workflows:
   monthly-release:
+    when: << pipeline.parameters.cron >>
     # Publishes the `YYYY.MM` tag as well as the `stable` tag
-    triggers:
-      - schedule:
-          # Monthly on the 2nd
-          cron: "0 0 2 * *"
+    jobs:
+      - schedule-fix:
           filters:
             branches:
-              only: main
-    jobs:
+              ignore: /.*/
       - test:
+          requires:
+            - schedule-fix
+          filters:
+            branches:
+              ignore: /.*/
           context: cimg-publishing
       - publish-monthly:
           requires:
             - test
           filters:
             branches:
-              only: main
+              ignore: /.*/
           context: cimg-publishing
   main:
+    when:
+      not: << pipeline.parameters.cron >>
     # Always runs. When the main branch runs, publishes the `edge` Docker tag
     jobs:
       - test:
@@ -33,6 +43,8 @@ workflows:
               only: main
           context: cimg-publishing
   manual-monthly:
+    when:
+      not: << pipeline.parameters.cron >>
     # Used to respin this month's snapshot
     jobs:
       - test:
@@ -143,4 +155,16 @@ jobs:
               docker push cimg/base:${VERSION}
               docker push cimg/base:${VERSION}-18.04
               docker push cimg/base:${VERSION}-20.04
+            fi
+  schedule-fix:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: "Only run on the first Monday of the month"
+          command: |
+            dom=$(date "+%-d")
+            if (( $dom > 7 )); then
+              echo "It's not the first week. Skipping."
+              exit 1
             fi

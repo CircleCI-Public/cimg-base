@@ -1,0 +1,13 @@
+{
+	"name": "Monthly Snapshot",
+	"description": "Kickoff a pipeline to publish new monthly snapshots of the base image.",
+	"parameters": {
+		"branch": "main",
+		"cron": true
+	},
+	"timetable": {
+		"per_hour": 1,
+		"hours_of_day": [10],
+		"days_of_week": ["MON"]
+	}
+}
