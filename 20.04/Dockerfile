@@ -44,6 +44,7 @@ RUN apt-get update && apt-get install -y \
 		autoconf \
 		build-essential \
 		ca-certificates \
+		cmake \
 		# already installed but here for consistency
 		curl \
 		gnupg \
@@ -79,7 +80,7 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
-ENV DOCKER_VERSION 5:20.10.8~3-0~ubuntu-
+ENV DOCKER_VERSION 5:20.10.9~3-0~ubuntu-
 RUN apt-get update && apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
