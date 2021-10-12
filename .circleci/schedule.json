@@ -9,5 +9,6 @@
 		"per_hour": 1,
 		"hours_of_day": [10],
 		"days_of_week": ["MON"]
-	}
+	},
+	"attribution-actor": "system"
 }
