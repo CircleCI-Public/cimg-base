@@ -50,6 +50,7 @@ RUN apt-get update && apt-get install -y \
 		gnupg \
 		gzip \
 		jq \
+		libcurl4-openssl-dev \
 		# popular DB lib - MariaDB
 		libmariadb-dev \
 		# allows MySQL users to use MariaDB lib
