@@ -57,6 +57,7 @@ RUN apt-get update && apt-get install -y \
 		libmariadb-dev-compat \
 		# popular DB lib - PostgreSQL
 		libpq-dev \
+		libsqlite3-dev \
 		make \
 		# for ssh-enabled builds
 		nano \
@@ -81,7 +82,7 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
-ENV DOCKER_VERSION 5:20.10.9~3-0~ubuntu-
+ENV DOCKER_VERSION 5:20.10.11~3-0~ubuntu-
 RUN apt-get update && apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
