@@ -98,9 +98,10 @@ RUN apt-get update && apt-get install -y \
 
 # Install Docker Compose - see prerequisite above
 ENV COMPOSE_VERSION 2.2.2
-RUN mkdir -p ~/.docker/cli-plugins/ && \
-	curl -sSL "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o ~/.docker/cli-plugins/docker-compose && \
-	chmod +x ~/.docker/cli-plugins/docker-compose && \
+RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
+	mkdir -p $dockerPluginDir && \
+	curl -sSL "https://github.com/docker/compose/releases/download/v${COMPOSE_VERSION}/docker-compose-linux-$(uname -m)" -o $dockerPluginDir/docker-compose && \
+	chmod +x $dockerPluginDir/docker-compose && \
 	# Quick test of the Docker Compose install
 	docker compose version
 
