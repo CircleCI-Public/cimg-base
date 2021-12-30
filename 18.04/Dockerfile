@@ -105,6 +105,14 @@ RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	# Quick test of the Docker Compose install
 	docker compose version
 
+# Installs Compose Switch Automatically in order to accomodate for Compose v1
+ENV COMPOSE_SWITCH_VERSION 1.0.4
+RUN curl -fL https://github.com/docker/compose-switch/releases/download/v${COMPOSE_SWITCH_VERSION}/docker-compose-linux-amd64 -o /usr/local/bin/compose-switch && \
+	chmod +x /usr/local/bin/compose-switch && \
+	update-alternatives --install /usr/local/bin/docker-compose docker-compose /usr/local/bin/compose-switch 99 && \
+	# Tests if docker-compose for v1 is transposed to v2
+	docker-compose version
+
 RUN curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.13.3/yq_linux_amd64.tar.gz" | \
 	tar -xz -C /usr/local/bin && \
 	mv /usr/local/bin/yq{_linux_amd64,}
