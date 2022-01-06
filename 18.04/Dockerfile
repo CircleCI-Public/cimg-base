@@ -57,6 +57,7 @@ RUN apt-get update && apt-get install -y \
 		libmariadb-dev-compat \
 		# popular DB lib - PostgreSQL
 		libpq-dev \
+		libssl-dev \
 		libsqlite3-dev \
 		make \
 		# for ssh-enabled builds
