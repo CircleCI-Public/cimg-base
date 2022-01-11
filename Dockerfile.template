@@ -24,6 +24,7 @@ RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci && \
 	echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep && \
 	sudo -u circleci mkdir /home/circleci/project && \
+	sudo -u circleci mkdir /home/circleci/bin && \
 
 	# Install Dockerize v0.6.1
 	# Source repo: https://github.com/jwilder/dockerize
