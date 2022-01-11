@@ -71,7 +71,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: "20.10.12"
+          version: "20.10.11"
       - run:
           name: "Build Dockerfiles"
           command: |
@@ -98,7 +98,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: "20.10.12"
+          version: "20.10.11"
       - run:
           name: "Build & Tag Images"
           command: |
@@ -122,7 +122,7 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker:
-          version: "20.10.12"
+          version: "20.10.11"
       - run:
           name: "Build & Tag Images"
           command: |
