@@ -35,7 +35,7 @@ For example:
 jobs:
   build:
     docker:
-      - image: cimg/base:2020.12
+      - image: cimg/base:2022.01
     steps:
       - checkout
       # Whatever you want to do
@@ -44,7 +44,7 @@ jobs:
 ```
 
 In the above example, the CircleCI Base Docker image is used for the primary container.
-More specifically, the tag `2020.12` indicates the dated version of the base image.
+More specifically, the tag `2022.01` indicates the dated version of the base image.
 See how tags work below for more information.
 
 ## How This Image Works
@@ -79,7 +79,7 @@ This image should be used by projects that want a decent level of stability but 
 It is typically updated once a month.
 
 `<YYYY.MM>` - This image tag is a monthly snapshot of the image, referred to by the 4 digit year, dot, and a 2 digit month.
-For example `2019.09` would be the monthly snapshot tag from September 2019.
+For example `2022.01` would be the monthly snapshot tag from January 2022.
 This tag is intended for projects that are highly sensitive to changes and want the most deterministic builds possible.
 
 `-version` - This is an optional extension to the tag to specify the version of Ubuntu to use.
