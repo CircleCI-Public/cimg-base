@@ -8,7 +8,7 @@
 	<h3>A Continous Integration focused Ubuntu Docker image built to run on CircleCI</h3>
 </div>
 
-[![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/cimg-base.svg?style=shield)](https://circleci.com/gh/CircleCI-Public/cimg-base) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/cimg-base/main/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/cimg/base)](https://hub.docker.com/r/cimg/base) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/circleci-images)
+[![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/cimg-base.svg?style=shield)](https://circleci.com/gh/CircleCI-Public/cimg-base) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/cimg-base/main/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/cimg/base)](https://hub.docker.com/r/cimg/base) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/circleci-images) [![Repository](https://img.shields.io/badge/github-README-brightgreen)](https://github.com/CircleCI-Public/cimg-base)
 
 `cimg/base` is an Ubuntu Docker image created by CircleCI with continuous integration builds in mind.
 As its name suggests, this image is designed to serve as a base image for other CircleCI Convenience Images (images prefixed with `cimg/`).
@@ -16,7 +16,6 @@ As its name suggests, this image is designed to serve as a base image for other 
 This image is also very useful for CircleCI users to use as a base for their own custom Docker images.
 
 This image contains the minimum tools required to operate a build on CircleCI (such as `git`) as well as extremely popular and useful tools in CircleCI (such as `docker`).
-
 
 ## Table of Contents
 
@@ -26,7 +25,6 @@ This image contains the minimum tools required to operate a build on CircleCI (s
 - [Contributing](#contributing)
 - [Additional Resources](#additional-resources)
 - [License](#license)
-
 
 ## Getting Started
 
@@ -49,7 +47,6 @@ In the above example, the CircleCI Base Docker image is used for the primary con
 More specifically, the tag `2020.12` indicates the dated version of the base image.
 See how tags work below for more information.
 
-
 ## How This Image Works
 
 This image contains the Ubuntu Linux operating system and everything needed to run most builds on CircleCI.
@@ -68,8 +65,8 @@ This image has the following tagging scheme:
 
 ```
 cimg/base:edge[-version]
-cimg/base:stable[-version] 
-cimg/base:<YYYY.MM>[-version] 
+cimg/base:stable[-version]
+cimg/base:<YYYY.MM>[-version]
 ```
 
 `edge` - This image tag points to the latest version of the Base image.
@@ -92,7 +89,6 @@ When leaving the version out, suggested, the default version will be used.
 The default Ubuntu version is the newest LTS version, after it has been out for 2 months.
 For example, Ubuntu 20.04 came out in April 2020, so it became the default version for this image in June 2020.
 The previous LTS version will be supported for a year after it drops out of the default slot.
-
 
 ## Development
 
@@ -208,7 +204,6 @@ You can respin (re-release) a monthly snapshot where there's a serious bug or se
 This can be done by tagging a commit as `monthly`.
 This will re-create the monthly snapshot for the current month.
 
-
 ## Contributing
 
 We encourage [issues](https://github.com/CircleCI-Public/cimg-base/issues) and [pull requests](https://github.com/CircleCI-Public/cimg-base/pulls) against this repository. In order to value your time, here are some things to consider:
@@ -217,14 +212,12 @@ We encourage [issues](https://github.com/CircleCI-Public/cimg-base/issues) and [
 1. PRs are welcome. If you have a PR that will potentially take a large amount of time to make, it will be better to open an issue to discuss it first to make sure it's something worth investing the time in.
 1. Issues should be used to report bugs or request additional/removal of tools in this image. For help with images, please visit [CircleCI Discuss](https://discuss.circleci.com/c/ecosystem/circleci-images).
 
-
 ## Additional Resources
 
 [CircleCI Docs](https://circleci.com/docs/) - The official CircleCI Documentation website.  
 [CircleCI Configuration Reference](https://circleci.com/docs/2.0/configuration-reference/#section=configuration) - From CircleCI Docs, the configuration reference page is one of the most useful pages we have.
 It will list all of the keys and values supported in `.circleci/config.yml`.  
-[Docker Docs](https://docs.docker.com/) - For simple projects this won't be needed but if you want to dive deeper into learning Docker, this is a great resource.  
-
+[Docker Docs](https://docs.docker.com/) - For simple projects this won't be needed but if you want to dive deeper into learning Docker, this is a great resource.
 
 ## License
 
