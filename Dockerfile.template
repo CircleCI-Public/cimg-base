@@ -1,3 +1,5 @@
+# Edit this file to generate changes, which will generate new build scripts and Dockerfiles - do not edit specific Dockerfiles by hand
+
 # vim:set ft=dockerfile:
 
 FROM %%PARENT%%:%%VERSION_FULL%%
