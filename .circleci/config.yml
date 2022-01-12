@@ -67,7 +67,8 @@ workflows:
 jobs:
   test:
     docker:
-      - image: cimg/base@sha256:9d94b570bdd6809833d5e12d2ca1cb56de77d71dfe1d7e2fe44070b7fbbed048
+      # references for this digest refers to cimg/base:2022.01
+      - image: cimg/base@sha256:bf1a115683b4b0366dce294accf87ba967b9ad0d78f29d974b71dc7e79ffbee2
     steps:
       - checkout
       - setup_remote_docker:
@@ -94,7 +95,7 @@ jobs:
 
   publish-edge:
     docker:
-      - image: cimg/base@sha256:9d94b570bdd6809833d5e12d2ca1cb56de77d71dfe1d7e2fe44070b7fbbed048
+      - image: cimg/base@sha256:bf1a115683b4b0366dce294accf87ba967b9ad0d78f29d974b71dc7e79ffbee2
     steps:
       - checkout
       - setup_remote_docker:
@@ -118,7 +119,7 @@ jobs:
 
   publish-monthly:
     docker:
-      - image: cimg/base@sha256:9d94b570bdd6809833d5e12d2ca1cb56de77d71dfe1d7e2fe44070b7fbbed048
+      - image: cimg/base@sha256:bf1a115683b4b0366dce294accf87ba967b9ad0d78f29d974b71dc7e79ffbee2
     steps:
       - checkout
       - setup_remote_docker:
