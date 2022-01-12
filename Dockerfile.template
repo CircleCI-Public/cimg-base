@@ -1,6 +1,6 @@
-# Edit this file to generate changes, which will generate new build scripts and Dockerfiles - do not edit specific Dockerfiles by hand
-
 # vim:set ft=dockerfile:
+
+# Do not edit individual Dockerfiles manually. Instead, please make changes to the Dockerfile.template, which will be used by the build script to generate Dockerfiles.
 
 FROM %%PARENT%%:%%VERSION_FULL%%
 
@@ -25,7 +25,7 @@ RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	useradd --uid=3434 --user-group --create-home circleci && \
 	echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci && \
 	echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep && \
-	sudo -u circleci mkdir /home/circleci/project && \
+ 	sudo -u circleci mkdir /home/circleci/project && \
 
 	# Install Dockerize v0.6.1
 	# Source repo: https://github.com/jwilder/dockerize
