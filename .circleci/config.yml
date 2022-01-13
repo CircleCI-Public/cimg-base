@@ -67,11 +67,12 @@ workflows:
 jobs:
   test:
     docker:
-      - image: cibuilds/docker:19.03
+      # references for this digest refers to cimg/base:2022.01
+      - image: cimg/base@sha256:bf1a115683b4b0366dce294accf87ba967b9ad0d78f29d974b71dc7e79ffbee2
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.2
+          version: "20.10.11"
       - run:
           name: "Build Dockerfiles"
           command: |
@@ -85,20 +86,20 @@ jobs:
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
 
               # Update the Docker Hub description
-              STUBB_VER=0.2.0
-              STUBB_URL="https://github.com/CircleCI-Public/stubb/releases/download/v${STUBB_VER}/stubb_${STUBB_VER}-linux-amd64.tar.gz"
-              curl -sSL $STUBB_URL | tar -xz -C /usr/local/bin stubb
+              SONAR_VER=0.15.0
+              SONAR_URL="https://github.com/felicianotech/sonar/releases/download/v${SONAR_VER}/sonar-v${SONAR_VER}-linux-amd64.tar.gz"
+              curl -sSL $SONAR_URL | tar -xz -C /usr/local/bin sonar
 
-              stubb set description cimg/base ./README.md
+              sonar set description cimg/base ./README.md
             fi
 
   publish-edge:
     docker:
-      - image: cibuilds/docker:19.03
+      - image: cimg/base@sha256:bf1a115683b4b0366dce294accf87ba967b9ad0d78f29d974b71dc7e79ffbee2
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.2
+          version: "20.10.11"
       - run:
           name: "Build & Tag Images"
           command: |
@@ -118,11 +119,11 @@ jobs:
 
   publish-monthly:
     docker:
-      - image: cibuilds/docker:19.03
+      - image: cimg/base@sha256:bf1a115683b4b0366dce294accf87ba967b9ad0d78f29d974b71dc7e79ffbee2
     steps:
       - checkout
       - setup_remote_docker:
-          version: 20.10.2
+          version: "20.10.11"
       - run:
           name: "Build & Tag Images"
           command: |
