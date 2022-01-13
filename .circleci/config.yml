@@ -81,14 +81,15 @@ jobs:
       - run:
           name: "Publish Docker Hub Description (main branch only)"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "main" ]; then
+            if [ "${CIRCLE_BRANCH}" == "make-new-dir" ]; then
              
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
 
               # Update the Docker Hub description
               SONAR_VER=0.15.0
               SONAR_URL="https://github.com/felicianotech/sonar/releases/download/v${SONAR_VER}/sonar-v${SONAR_VER}-linux-amd64.tar.gz"
-              curl -sSL $SONAR_URL | tar -xz -C /usr/local/bin sonar
+              mkdir -p $HOME/bin
+              curl -sSL $SONAR_URL | tar -xz -C $HOME/bin sonar
 
               sonar set description cimg/base ./README.md
             fi
