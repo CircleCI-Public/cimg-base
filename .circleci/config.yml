@@ -81,7 +81,7 @@ jobs:
       - run:
           name: "Publish Docker Hub Description (main branch only)"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "make-new-dir" ]; then
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
              
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
 
