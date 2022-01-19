@@ -3,3 +3,4 @@
 repository=base
 parent=ubuntu
 variants=()
+namespace=cimg
