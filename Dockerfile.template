@@ -72,8 +72,9 @@ RUN apt-get update && apt-get install -y \
 		# compiling tool
 		pkg-config \
 		postgresql-client \
+		shellcheck \
 		software-properties-common \
-		# already installed but hear for consistency
+		# already installed but here for consistency
 		sudo \
 		tar \
 		tzdata \

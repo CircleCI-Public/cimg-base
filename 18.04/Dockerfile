@@ -1,5 +1,7 @@
 # vim:set ft=dockerfile:
 
+# Do not edit individual Dockerfiles manually. Instead, please make changes to the Dockerfile.template, which will be used by the build script to generate Dockerfiles.
+
 FROM ubuntu:18.04
 
 LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
@@ -70,8 +72,9 @@ RUN apt-get update && apt-get install -y \
 		# compiling tool
 		pkg-config \
 		postgresql-client \
+		shellcheck \
 		software-properties-common \
-		# already installed but hear for consistency
+		# already installed but here for consistency
 		sudo \
 		tar \
 		tzdata \
