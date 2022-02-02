@@ -65,22 +65,29 @@ This image has the following tagging scheme:
 
 ```
 cimg/base:edge[-version]
+cimg/base:current[-version]
 cimg/base:stable[-version]
 cimg/base:<YYYY.MM>[-version]
 ```
 
 `edge` - This image tag points to the latest version of the Base image.
 This tag is built from the `HEAD` of the `main` branch.
-The `edge` tag is intended to be used as a testing version of the image with the most recent changes however not guaranteed to be all that stable.
+The `edge` tag is intended to be used as a testing version of the image with the most recent changes however not guaranteed to be all that stable
+Software an be added for test that might actually be removed before the next monthly snapshot..
 This tag is not recommended for production software.
 
-`stable` - This image tag points to the latest, production ready base image.
+`current` - This image tag points to the most recent monthly snapshot.
 This image should be used by projects that want a decent level of stability but would like to get occasional software updates.
 It is typically updated once a month.
+While not often, this tag can introduce breaking changes.
+
+`stable` - This was the previous name of the `current` tag.
+While it will still work for awhile, please use `current` instead.
 
 `<YYYY.MM>` - This image tag is a monthly snapshot of the image, referred to by the 4 digit year, dot, and a 2 digit month.
 For example `2022.01` would be the monthly snapshot tag from January 2022.
 This tag is intended for projects that are highly sensitive to changes and want the most deterministic builds possible.
+Unless absolutely necessary (for security for example), no breaking changes will be introduced as we don't rebuild a monthly snapshot.
 
 `-version` - This is an optional extension to the tag to specify the version of Ubuntu to use.
 There can be up to two options, the current LTS and the previous LTS.
