@@ -116,7 +116,7 @@ RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	# Tests if docker-compose for v1 is transposed to v2
 	docker-compose version
 
-RUN curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.20.1/yq_linux_amd64.tar.gz" | \
+RUN curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.21.1/yq_linux_amd64.tar.gz" | \
 	tar -xz -C /usr/local/bin && \
 	mv /usr/local/bin/yq{_linux_amd64,}
 
