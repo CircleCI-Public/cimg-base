@@ -35,16 +35,16 @@ For example:
 jobs:
   build:
     docker:
-      - image: cimg/base:2022.01
+      - image: cimg/base:2022.03
     steps:
       - checkout
       # Whatever you want to do
-      - run: sudo apt-get update && sudo apt-get install -y cowsay
-      - run: cowsay Continuous Integration Rocks!
+      - run: sudo apt-get update && sudo apt-get install -y figlet
+      - run: figlet Continuous Integration Rocks!
 ```
 
 In the above example, the CircleCI Base Docker image is used for the primary container.
-More specifically, the tag `2022.01` indicates the dated version of the base image.
+More specifically, the tag `2022.03` indicates the dated version of the base image.
 See how tags work below for more information.
 
 ## How This Image Works
