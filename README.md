@@ -10,6 +10,8 @@
 
 [![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/cimg-base.svg?style=shield)](https://circleci.com/gh/CircleCI-Public/cimg-base) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/cimg-base/main/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/cimg/base)](https://hub.docker.com/r/cimg/base) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/circleci-images) [![Repository](https://img.shields.io/badge/github-README-brightgreen)](https://github.com/CircleCI-Public/cimg-base)
 
+[![InsightsSnapshot](https://dl.circleci.com/insights-snapshot/gh/CircleCI-Public/cimg-base/main/main/badge.svg)](https://app.circleci.com/insights/github/CircleCI-Public/cimg-base/workflows/main?branch=main)  
+
 `cimg/base` is an Ubuntu Docker image created by CircleCI with continuous integration builds in mind.
 As its name suggests, this image is designed to serve as a base image for other CircleCI Convenience Images (images prefixed with `cimg/`).
 
