@@ -9,7 +9,9 @@ LABEL maintainer="Community & Partner Engineering Team <community-partner@circle
 # Change default shell for RUN from Dash to Bash
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
 
-ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive \
+    TERM=dumb \
+    PAGER=cat
 
 # Configure environment
 RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
