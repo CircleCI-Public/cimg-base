@@ -45,7 +45,11 @@ ENV PATH=/home/circleci/bin:/home/circleci/.local/bin:$PATH \
 	LANGUAGE=en_US:en \
 	LC_ALL=en_US.UTF-8
 
-RUN apt-get update && apt-get install -y \
+RUN noInstallRecommends="" && \
+	if [[ "22.04" == "22.04" ]]; then \
+		noInstallRecommends="--no-install-recommends"; \
+	fi && \
+	apt-get update && apt-get install -y $noInstallRecommends \
 		autoconf \
 		build-essential \
 		ca-certificates \
@@ -97,8 +101,13 @@ RUN apt-get update && apt-get install -y \
 		gnupg-agent \
 		software-properties-common && \
 	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-	add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" && \
-	apt-get install -y docker-ce=${DOCKER_VERSION}$(lsb_release -cs) docker-ce-cli=${DOCKER_VERSION}$(lsb_release -cs) containerd.io && \
+	# Setup an envar to support per-release-actions
+	ubuntuCodename=$( lsb_release -cs ) && \
+	if [[ ubuntuCodename == "jammy" ]]; then \
+		ubuntuCodename="focal"; \
+	fi && \
+	add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu ${ubuntuCodename} stable" && \
+	apt-get install -y docker-ce=${DOCKER_VERSION}$ubuntuCodename docker-ce-cli=${DOCKER_VERSION}$ubuntuCodename containerd.io && \
 	# Quick test of the Docker install
 	docker --version && \
 	rm -rf /var/lib/apt/lists/*
