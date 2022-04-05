@@ -8,7 +8,7 @@ parameters:
 workflows:
   monthly-release:
     when: << pipeline.parameters.cron >>
-    # Publishes the `YYYY.MM` tag as well as the `stable` tag
+    # Publishes the `YYYY.MM` tag as well as the `current` tag
     jobs:
       - schedule-fix:
           filters:
@@ -134,7 +134,6 @@ jobs:
             docker tag cimg/base:20.04 cimg/base:current
             docker tag cimg/base:18.04 cimg/base:current-18.04
             docker tag cimg/base:20.04 cimg/base:current-20.04
-            docker tag cimg/base:20.04 cimg/base:current-22.04
             docker tag cimg/base:20.04 cimg/base:stable
             docker tag cimg/base:18.04 cimg/base:stable-18.04
             docker tag cimg/base:20.04 cimg/base:stable-20.04
@@ -142,7 +141,6 @@ jobs:
             docker tag cimg/base:20.04 cimg/base:${VERSION}
             docker tag cimg/base:18.04 cimg/base:${VERSION}-18.04
             docker tag cimg/base:20.04 cimg/base:${VERSION}-20.04
-            docker tag cimg/base:22.04 cimg/base:${VERSION}-22.04
       - deploy:
           name: "Publish Docker Images (main branch only)"
           command: |
@@ -151,18 +149,15 @@ jobs:
               docker push cimg/base:stable
               docker push cimg/base:stable-18.04
               docker push cimg/base:stable-20.04
-              docker push cimg/base:stable-22.04
               VERSION=$( date +%Y.%m )
               docker push cimg/base:${VERSION}
               docker push cimg/base:${VERSION}-18.04
               docker push cimg/base:${VERSION}-20.04
-              docker push cimg/base:${VERSION}-22.04
             elif [ "${CIRCLE_TAG}" == "monthly" ]; then
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
               docker push cimg/base:current
               docker push cimg/base:current-18.04
               docker push cimg/base:current-20.04
-              docker push cimg/base:current-22.04
               docker push cimg/base:stable
               docker push cimg/base:stable-18.04
               docker push cimg/base:stable-20.04
@@ -170,7 +165,6 @@ jobs:
               docker push cimg/base:${VERSION}
               docker push cimg/base:${VERSION}-18.04
               docker push cimg/base:${VERSION}-20.04
-              docker push cimg/base:${VERSION}-22.04
             fi
   schedule-fix:
     docker:
