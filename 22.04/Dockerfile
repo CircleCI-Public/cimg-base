@@ -93,7 +93,7 @@ RUN noInstallRecommends="" && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
-ENV DOCKER_VERSION 5:20.10.13~3-0~ubuntu-
+ENV DOCKER_VERSION 5:20.10.14~3-0~ubuntu-
 RUN apt-get update && apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
@@ -101,13 +101,8 @@ RUN apt-get update && apt-get install -y \
 		gnupg-agent \
 		software-properties-common && \
 	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-	# Setup an envar to support per-release-actions
-	ubuntuCodename=$( lsb_release -cs ) && \
-	if [[ ubuntuCodename == "jammy" ]]; then \
-		ubuntuCodename="focal"; \
-	fi && \
-	add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu ${ubuntuCodename} stable" && \
-	apt-get install -y docker-ce=${DOCKER_VERSION}$ubuntuCodename docker-ce-cli=${DOCKER_VERSION}$ubuntuCodename containerd.io && \
+	add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $( lsb_release -cs ) stable" && \
+	apt-get install -y docker-ce=${DOCKER_VERSION}$( lsb_release -cs ) docker-ce-cli=${DOCKER_VERSION}$( lsb_release -cs ) containerd.io && \
 	# Quick test of the Docker install
 	docker --version && \
 	rm -rf /var/lib/apt/lists/*
