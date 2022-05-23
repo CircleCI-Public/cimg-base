@@ -127,6 +127,10 @@ RUN curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.23.1/yq_linu
 	mv /usr/local/bin/yq{_linux_amd64,}
 
 USER circleci
+# Run commands and tests as circleci user
+RUN whoami && \
+	# opt-out of the new security feature, not needed in a CI environment
+	git config --global --add safe.directory '*'
 
 # Match the default CircleCI working directory
 WORKDIR /home/circleci/project
