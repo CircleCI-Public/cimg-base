@@ -86,13 +86,11 @@ RUN noInstallRecommends="" && \
 		tzdata \
 		unzip \
 		# for ssh-enabled builds
-		vim-tiny \
+		vim \
 		wget \
 		zip && \
 	add-apt-repository ppa:git-core/ppa && apt-get install -y git && \
-	rm -rf /var/lib/apt/lists/* && \
-	# vim-tiny doesn't include a vim binary even though it includes vim
-	ln -s /usr/bin/vi /usr/bin/vim
+	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
 ENV DOCKER_VERSION 5:20.10.14~3-0~ubuntu-
