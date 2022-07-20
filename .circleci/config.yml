@@ -105,19 +105,19 @@ jobs:
           name: "Build & Tag Images"
           command: |
             ./build-images.sh
-            docker tag cimg/base:20.04 cimg/base:edge
             docker tag cimg/base:18.04 cimg/base:edge-18.04
             docker tag cimg/base:20.04 cimg/base:edge-20.04
             docker tag cimg/base:22.04 cimg/base:edge-22.04
+            docker tag cimg/base:22.04 cimg/base:edge
       - deploy:
           name: "Publish Docker Images (main branch only)"
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
-              docker push cimg/base:edge
               docker push cimg/base:edge-18.04
               docker push cimg/base:edge-20.04
               docker push cimg/base:edge-22.04
+              docker push cimg/base:edge
             fi
 
   publish-monthly:
