@@ -111,7 +111,7 @@ RUN apt-get update && apt-get install -y \
 # Even though they use the same repo, Docker Compose is installed seperately
 # from Docker Engine due to the fact that Docker Compose releases much more
 # frequently. This is a caching decision.
-ENV COMPOSE_VER 2.6.0
+ENV COMPOSE_VER 2.7.0
 ENV COMPOSE_SWITCH_VERSION 1.0.4
 RUN apt-get update && apt-get install --yes --no-install-recommends \
 		docker-compose-plugin=${COMPOSE_VER}~ubuntu-$( lsb_release -cs ) \
