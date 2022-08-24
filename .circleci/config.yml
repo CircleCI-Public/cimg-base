@@ -10,23 +10,11 @@ workflows:
     when: << pipeline.parameters.cron >>
     # Publishes the `YYYY.MM` tag as well as the `current` tag
     jobs:
-      - schedule-fix:
-          filters:
-            branches:
-              ignore: /.*/
       - test:
-          requires:
-            - schedule-fix
-          filters:
-            branches:
-              ignore: /.*/
           context: cimg-publishing
       - publish-monthly:
           requires:
             - test
-          filters:
-            branches:
-              ignore: /.*/
           context: cimg-publishing
   main:
     when:
