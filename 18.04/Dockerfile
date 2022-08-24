@@ -108,11 +108,11 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
-ENV COMPOSE_VERSION 2.4.1
+ENV COMPOSE_VER 2.10.1
 ENV COMPOSE_SWITCH_VERSION 1.0.4
 RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	mkdir -p $dockerPluginDir && \
-	curl -sSL "https://github.com/docker/compose/releases/download/v${COMPOSE_VERSION}/docker-compose-linux-$(uname -m)" -o $dockerPluginDir/docker-compose && \
+	curl -sSL "https://github.com/docker/compose/releases/download/v${COMPOSE_VER}/docker-compose-linux-$(uname -m)" -o $dockerPluginDir/docker-compose && \
 	chmod +x $dockerPluginDir/docker-compose && \
 	curl -fL https://github.com/docker/compose-switch/releases/download/v${COMPOSE_SWITCH_VERSION}/docker-compose-linux-amd64 -o /usr/local/bin/compose-switch && \
 	# Quick test of the Docker Compose install
