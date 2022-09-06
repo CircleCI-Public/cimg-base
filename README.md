@@ -37,7 +37,7 @@ For example:
 jobs:
   build:
     docker:
-      - image: cimg/base:2022.03
+      - image: cimg/base:2022.09
     steps:
       - checkout
       # Whatever you want to do
@@ -46,7 +46,7 @@ jobs:
 ```
 
 In the above example, the CircleCI Base Docker image is used for the primary container.
-More specifically, the tag `2022.03` indicates the dated version of the base image.
+More specifically, the tag `2022.09` indicates the dated version of the base image.
 See how tags work below for more information.
 
 ## How This Image Works
@@ -68,7 +68,6 @@ This image has the following tagging scheme:
 ```
 cimg/base:edge[-version]
 cimg/base:current[-version]
-cimg/base:stable[-version]
 cimg/base:<YYYY.MM>[-version]
 ```
 
@@ -83,9 +82,6 @@ This image should be used by projects that want a decent level of stability but 
 It is typically updated once a month.
 While not often, this tag can introduce breaking changes.
 
-`stable` - This was the previous name of the `current` tag.
-While it will still work for awhile, please use `current` instead.
-
 `<YYYY.MM>` - This image tag is a monthly snapshot of the image, referred to by the 4 digit year, dot, and a 2 digit month.
 For example `2022.01` would be the monthly snapshot tag from January 2022.
 This tag is intended for projects that are highly sensitive to changes and want the most deterministic builds possible.
@@ -93,10 +89,10 @@ Unless absolutely necessary (for security for example), no breaking changes will
 
 `-version` - This is an optional extension to the tag to specify the version of Ubuntu to use.
 There can be up to two options, the current LTS and the previous LTS.
-As of this writing, those options would be `18.04` or `20.04`.
+As of this writing, those options would be `18.04`, `20.04`, or `22.04`..
 When leaving the version out, suggested, the default version will be used.
-The default Ubuntu version is the newest LTS version, after it has been out for 2 months.
-For example, Ubuntu 20.04 came out in April 2020, so it became the default version for this image in June 2020.
+The default Ubuntu version is the newest LTS version, after it has been out for 4 months.
+For example, Ubuntu 20.04 came out in April 2020, so it became the default version for this image in August 2020.
 The previous LTS version will be supported for a year after it drops out of the default slot.
 
 ## Development
@@ -106,7 +102,7 @@ This has the following requirements:
 
 - local machine of Linux (Ubuntu tested) or macOS
 - modern version of Bash (v4+)
-- modern version of Docker Engine (v19.03+)
+- modern version of Docker Engine (v20.10+)
 
 ### Cloning For Community Users (no write access to this repository)
 
@@ -142,7 +138,7 @@ Changes to this image should occur in the `Dockerfile.template` file and then us
 For example, you would run the following from the root of the repo:
 
 ```bash
-./shared/gen-dockerfiles.sh 18.04 20.04
+./shared/gen-dockerfiles.sh 18.04 20.04 22.04
 ```
 
 The generated Dockerfile will be located at `./18.04/Dockefile` and `./20.04/Dockerfile`.
