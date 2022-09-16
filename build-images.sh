@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
+# Do not edit by hand; please use build scripts/templates to make changes
 
-docker build --file 18.04/Dockerfile -t cimg/base:18.04 .
-docker build --file 20.04/Dockerfile -t cimg/base:20.04 .
-docker build --file 22.04/Dockerfile -t cimg/base:22.04 .
+docker context create cimg
+docker buildx create --use cimg
+docker buildx build --platform=linux/amd64,linux/arm64 --file 18.04/Dockerfile -t cimg/base:18.04 -t cimg/base:18.04 .
+docker buildx build --platform=linux/amd64,linux/arm64 --file 20.04/Dockerfile -t cimg/base:20.04 -t cimg/base:20.04 .
+docker buildx build --platform=linux/amd64,linux/arm64 --file 22.04/Dockerfile -t cimg/base:22.04 -t cimg/base:22.04 .

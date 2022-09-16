@@ -30,7 +30,7 @@ RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	sudo -u circleci mkdir /home/circleci/project && \
 	sudo -u circleci mkdir /home/circleci/bin && \
 
-	dockerizeArch=ard64 && \
+	dockerizeArch=arm64 && \
 	if uname -p | grep "x86_64"; then \
 		dockerizeArch=x86_64; \
 	fi && \
@@ -99,7 +99,7 @@ RUN apt-get update && apt-get install -y \
 		gnupg-agent \
 		software-properties-common && \
 	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
-	add-apt-repository -y "deb [arch=amd64] https://download.docker.com/linux/ubuntu $( lsb_release -cs ) stable" && \
+	add-apt-repository -y "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $( lsb_release -cs ) stable" && \
 	apt-get install -y docker-ce=${DOCKER_VERSION}$( lsb_release -cs ) docker-ce-cli=${DOCKER_VERSION}$( lsb_release -cs ) containerd.io && \
 	# Quick test of the Docker install
 	docker --version && \
@@ -112,7 +112,7 @@ RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	mkdir -p $dockerPluginDir && \
 	curl -sSL "https://github.com/docker/compose/releases/download/v${COMPOSE_VER}/docker-compose-linux-$(uname -m)" -o $dockerPluginDir/docker-compose && \
 	chmod +x $dockerPluginDir/docker-compose && \
-	curl -fL https://github.com/docker/compose-switch/releases/download/v${COMPOSE_SWITCH_VERSION}/docker-compose-linux-amd64 -o /usr/local/bin/compose-switch && \
+	curl -fL "https://github.com/docker/compose-switch/releases/download/v${COMPOSE_SWITCH_VERSION}/docker-compose-linux-$(dpkg --print-architecture)" -o /usr/local/bin/compose-switch && \
 	# Quick test of the Docker Compose install
 	docker compose version && \
 	chmod +x /usr/local/bin/compose-switch && \
