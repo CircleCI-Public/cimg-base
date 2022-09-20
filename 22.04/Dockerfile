@@ -30,14 +30,12 @@ RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	sudo -u circleci mkdir /home/circleci/project && \
 	sudo -u circleci mkdir /home/circleci/bin && \
 
-	# Install Dockerize v0.6.1
-	# Source repo: https://github.com/jwilder/dockerize
-	# I (Ricardo) would like to replace this one day. It's a tool not really
-	# maintained and we can likely offer something better.
-	curl -sSL --fail --retry 3 --output /tmp/dockerize-linux-amd64.tar.gz "https://circle-downloads.s3.amazonaws.com/circleci-images/cache/linux-amd64/dockerize-latest.tar.gz" && \
-	tar -C /usr/local/bin -xzvf /tmp/dockerize-linux-amd64.tar.gz && \
-	rm -rf /tmp/dockerize-linux-amd64.tar.gz && \
-	# Quick test of Dockerize
+	dockerizeArch=ard64 && \
+	if uname -p | grep "x86_64"; then \
+		dockerizeArch=x86_64; \
+	fi && \
+	curl -sSL --fail --retry 3 --output /usr/local/bin/dockerize "https://github.com/powerman/dockerize/releases/download/v0.8.0/dockerize-linux-${dockerizeArch}" && \
+	chmod +x /usr/local/bin/dockerize && \
 	dockerize --version
 
 ENV PATH=/home/circleci/bin:/home/circleci/.local/bin:$PATH \
