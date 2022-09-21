@@ -29,6 +29,7 @@ RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep && \
 	sudo -u circleci mkdir /home/circleci/project && \
 	sudo -u circleci mkdir /home/circleci/bin && \
+	sudo -u circleci mkdir -p /home/circleci/.local/bin && \
 
 	dockerizeArch=arm64 && \
 	if uname -p | grep "x86_64"; then \
