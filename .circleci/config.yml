@@ -52,13 +52,22 @@ workflows:
               ignore: /.*/
           context: cimg-publishing
 
+commands:
+  setup-buildx-deps:
+    steps:
+      - run:
+          name: "Install Docker buildx dependencies"
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y qemu-user-static binfmt-support
+
 jobs:
   test:
     machine:
       image: ubuntu-2204:2022.07.1
     steps:
       - checkout
-      - run: sudo apt-get update && sudo apt-get install -y qemu-user-static binfmt-support
+      - setup-buildx-deps
       - run:
           name: "Build Dockerfiles"
           command: |
@@ -81,12 +90,11 @@ jobs:
             fi
 
   publish-edge:
-    docker:
-      - image: cimg/base@sha256:bf1a115683b4b0366dce294accf87ba967b9ad0d78f29d974b71dc7e79ffbee2
+    machine:
+      image: ubuntu-2204:2022.07.1
     steps:
       - checkout
-      - setup_remote_docker:
-          version: "20.10.11"
+      - setup-buildx-deps
       - run:
           name: "Build & Tag Images"
           command: |
@@ -107,12 +115,11 @@ jobs:
             fi
 
   publish-monthly:
-    docker:
-      - image: cimg/base@sha256:bf1a115683b4b0366dce294accf87ba967b9ad0d78f29d974b71dc7e79ffbee2
+    machine:
+      image: ubuntu-2204:2022.07.1
     steps:
       - checkout
-      - setup_remote_docker:
-          version: "20.10.11"
+      - setup-buildx-deps
       - run:
           name: "Build & Tag Images"
           command: |
