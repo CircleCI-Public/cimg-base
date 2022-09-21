@@ -54,13 +54,11 @@ workflows:
 
 jobs:
   test:
-    docker:
-      # references for this digest refers to cimg/base:2022.01
-      - image: cimg/base@sha256:bf1a115683b4b0366dce294accf87ba967b9ad0d78f29d974b71dc7e79ffbee2
+    machine:
+      image: ubuntu-2204:2022.07.1
     steps:
       - checkout
-      - setup_remote_docker:
-          version: "20.10.11"
+      - run: sudo apt-get update && sudo apt-get install -y qemu-user-static binfmt-support
       - run:
           name: "Build Dockerfiles"
           command: |
