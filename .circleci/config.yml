@@ -151,15 +151,3 @@ jobs:
               docker push cimg/base:${VERSION}-22.04
               docker push cimg/base:${VERSION}
             fi
-  schedule-fix:
-    docker:
-      - image: cimg/base:stable
-    steps:
-      - run:
-          name: "Only run on the first Monday of the month"
-          command: |
-            dom=$(date "+%-d")
-            if (( $dom > 7 )); then
-              echo "It's not the first week. Skipping."
-              exit 1
-            fi
