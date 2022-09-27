@@ -98,7 +98,7 @@ jobs:
       - run:
           name: "Build & Tag Images"
           command: |
-            ./build-push-images.sh
+            ./build-base-images.sh
       - deploy:
           name: "Publish Docker Images (main branch only)"
           command: |
