@@ -107,7 +107,7 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
-ENV COMPOSE_VER 2.11.1
+ENV COMPOSE_VER 2.11.2
 ENV COMPOSE_SWITCH_VERSION 1.0.4
 RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	mkdir -p $dockerPluginDir && \
