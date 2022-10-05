@@ -116,38 +116,12 @@ jobs:
       - run:
           name: "Build & Tag Images"
           command: |
-            ./build-images.sh
-            docker tag cimg/base:18.04 cimg/base:current-18.04
-            docker tag cimg/base:20.04 cimg/base:current-20.04
-            docker tag cimg/base:22.04 cimg/base:current-22.04
-            docker tag cimg/base:22.04 cimg/base:current
-            VERSION=$( date +%Y.%m )
-            docker tag cimg/base:18.04 cimg/base:${VERSION}-18.04
-            docker tag cimg/base:20.04 cimg/base:${VERSION}-20.04
-            docker tag cimg/base:22.04 cimg/base:${VERSION}-22.04
-            docker tag cimg/base:22.04 cimg/base:${VERSION}
+            # This script is currently edited by hand
+            ./build-monthly-images.sh
       - deploy:
           name: "Publish Docker Images (main branch only)"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "main" ]; then
+            if [ "${CIRCLE_BRANCH}" == "main" ] || [ "${CIRCLE_TAG}" == "monthly" ]; then
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
-              docker push cimg/base:current-18.04
-              docker push cimg/base:current-20.04
-              docker push cimg/base:current-22.04
-              docker push cimg/base:current
-              VERSION=$( date +%Y.%m )
-              docker push cimg/base:${VERSION}-18.04
-              docker push cimg/base:${VERSION}-20.04
-              docker push cimg/base:${VERSION}
-            elif [ "${CIRCLE_TAG}" == "monthly" ]; then
-              echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
-              docker push cimg/base:current-18.04
-              docker push cimg/base:current-20.04
-              docker push cimg/base:current-22.04
-              docker push cimg/base:current
-              VERSION=$( date +%Y.%m )
-              docker push cimg/base:${VERSION}-18.04
-              docker push cimg/base:${VERSION}-20.04
-              docker push cimg/base:${VERSION}-22.04
-              docker push cimg/base:${VERSION}
+              ./push-monthly-images.sh
             fi
