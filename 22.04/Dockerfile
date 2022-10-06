@@ -24,7 +24,8 @@ RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	locale-gen en_US.UTF-8 && \
 	rm -rf /var/lib/apt/lists/* && \
 
-	useradd --uid=3434 --user-group --create-home circleci && \
+	groupadd --gid=1002 circleci && \
+	useradd --uid=1001 --gid=circleci --create-home circleci && \
 	echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci && \
 	echo 'Defaults    env_keep += "DEBIAN_FRONTEND"' >> /etc/sudoers.d/env_keep && \
 	sudo -u circleci mkdir /home/circleci/project && \
