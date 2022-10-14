@@ -93,6 +93,8 @@ RUN noInstallRecommends="" && \
 	add-apt-repository ppa:git-core/ppa && apt-get install -y git && \
 	# get the semi-official latest-stable git-lfs too
 	curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && apt-get install -y git-lfs && \
+	# Quick test of the git & git-lfs install
+	git version && git lfs version && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
