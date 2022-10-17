@@ -23,7 +23,7 @@ RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	&& \
 	locale-gen en_US.UTF-8 && \
 	rm -rf /var/lib/apt/lists/* && \
-
+	\
 	groupadd --gid=1002 circleci && \
 	useradd --uid=1001 --gid=circleci --create-home circleci && \
 	echo 'circleci ALL=NOPASSWD: ALL' >> /etc/sudoers.d/50-circleci && \
@@ -31,7 +31,7 @@ RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	sudo -u circleci mkdir /home/circleci/project && \
 	sudo -u circleci mkdir /home/circleci/bin && \
 	sudo -u circleci mkdir -p /home/circleci/.local/bin && \
-
+	\
 	dockerizeArch=arm64 && \
 	if uname -p | grep "x86_64"; then \
 		dockerizeArch=x86_64; \
@@ -89,7 +89,12 @@ RUN noInstallRecommends="" && \
 		vim \
 		wget \
 		zip && \
+	# get the semi-official latest-stable git instead of using the old(er) version from the ubuntu distro
 	add-apt-repository ppa:git-core/ppa && apt-get install -y git && \
+	# get the semi-official latest-stable git-lfs too
+	curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && apt-get install -y git-lfs && \
+	# Quick test of the git & git-lfs install
+	git version && git lfs version && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
