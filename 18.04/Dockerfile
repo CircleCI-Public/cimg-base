@@ -61,6 +61,7 @@ RUN noInstallRecommends="" && \
 		jq \
 		libcurl4-openssl-dev \
 		libmagic-dev \
+		file \
 		# popular DB lib - MariaDB
 		libmariadb-dev \
 		# allows MySQL users to use MariaDB lib
