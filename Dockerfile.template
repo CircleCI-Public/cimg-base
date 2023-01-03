@@ -56,6 +56,7 @@ RUN noInstallRecommends="" && \
 		cmake \
 		# already installed but here for consistency
 		curl \
+		file \
 		gnupg \
 		gzip \
 		jq \
