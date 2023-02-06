@@ -70,6 +70,7 @@ RUN noInstallRecommends="" && \
 		libpq-dev \
 		libssl-dev \
 		libsqlite3-dev \
+		lsof \
 		make \
 		# for ssh-enabled builds
 		nano \
@@ -100,7 +101,7 @@ RUN noInstallRecommends="" && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
-ENV DOCKER_VERSION 5:20.10.22~3-0~ubuntu-
+ENV DOCKER_VERSION 5:20.10.23~3-0~ubuntu-
 RUN apt-get update && apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
