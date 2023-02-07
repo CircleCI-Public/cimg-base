@@ -6,9 +6,9 @@
 		"cron": true
 	},
 	"timetable": {
-		"per_hour": 1,
-		"hours_of_day": [10],
-		"days_of_week": ["MON"]
+		"per-hour": 1,
+		"hours-of-day": [10],
+		"days-of-week": ["MON"]
 	},
 	"attribution-actor": "system"
 }
