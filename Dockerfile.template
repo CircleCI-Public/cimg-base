@@ -57,6 +57,7 @@ RUN noInstallRecommends="" && \
 		# already installed but here for consistency
 		curl \
 		file \
+		gettext-base \
 		gnupg \
 		gzip \
 		jq \
