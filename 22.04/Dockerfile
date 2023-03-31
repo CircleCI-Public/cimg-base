@@ -70,6 +70,7 @@ RUN noInstallRecommends="" && \
 		libpq-dev \
 		libssl-dev \
 		libsqlite3-dev \
+		lsof \
 		make \
 		# for ssh-enabled builds
 		nano \
@@ -100,7 +101,7 @@ RUN noInstallRecommends="" && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
-ENV DOCKER_VERSION 5:20.10.22~3-0~ubuntu-
+ENV DOCKER_VERSION 5:20.10.23~3-0~ubuntu-
 RUN apt-get update && apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
@@ -115,7 +116,7 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
-ENV COMPOSE_VER 2.14.2
+ENV COMPOSE_VER 2.16.0
 ENV COMPOSE_SWITCH_VERSION 1.0.5
 RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	mkdir -p $dockerPluginDir && \
@@ -129,7 +130,7 @@ RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	# Tests if docker-compose for v1 is transposed to v2
 	docker-compose version
 
-RUN curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.30.6/yq_linux_amd64.tar.gz" | \
+RUN curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.31.2/yq_linux_amd64.tar.gz" | \
 	tar -xz -C /usr/local/bin && \
 	mv /usr/local/bin/yq{_linux_amd64,}
 
