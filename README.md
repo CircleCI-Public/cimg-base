@@ -89,7 +89,7 @@ Unless absolutely necessary (for security for example), no breaking changes will
 
 `-version` - This is an optional extension to the tag to specify the version of Ubuntu to use.
 There can be up to two options, the current LTS and the previous LTS.
-As of this writing, those options would be `18.04`, `20.04`, or `22.04`..
+As of this writing, those options would be `20.04`, or `22.04`.
 When leaving the version out, suggested, the default version will be used.
 The default Ubuntu version is the newest LTS version, after it has been out for 4 months.
 For example, Ubuntu 20.04 came out in April 2020, so it became the default version for this image in August 2020.
@@ -131,26 +131,26 @@ git clone --recurse-submodules git@github.com:CircleCI-Public/cimg-base.git
 
 ### Generating Dockerfiles
 
-The Dockerfile in the Ubuntu version directory (i.e. `18.04/`) is already in a state to be built if you want to build a new version of this image.
+The Dockerfile in the Ubuntu version directory (i.e. `20.04/`) is already in a state to be built if you want to build a new version of this image.
 Running `docker build` in this directory will be enough.
 
 Changes to this image should occur in the `Dockerfile.template` file and then using the `gen-dockerfiles.sh` script, a new Dockerfile will be built.
 For example, you would run the following from the root of the repo:
 
 ```bash
-./shared/gen-dockerfiles.sh 18.04 20.04 22.04
+./shared/gen-dockerfiles.sh 20.04 22.04
 ```
 
-The generated Dockerfile will be located at `./18.04/Dockefile` and `./20.04/Dockerfile`.
+The generated Dockerfile will be located at `./20.04/Dockefile` and `./20.04/Dockerfile`.
 To build the first image locally and try it out, you can run the following:
 
 ```bash
-cd 18.04
-docker build -t test/base:18.04 .
-docker run -it test/base:18.04 bash
+cd 20.04
+docker build -t test/base:20.04 .
+docker run -it test/base:20.04 bash
 ```
 
-While CircleCI will only be publishing LTS versions of Ubuntu (such as 18.04 or 20.04), you are free to swap out the version number with something newer for your own personal use.
+While CircleCI will only be publishing LTS versions of Ubuntu (such as 20.04 or 22.04), you are free to swap out the version number with something newer for your own personal use.
 
 ### Building the Dockerfiles
 
