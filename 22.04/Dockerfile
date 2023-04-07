@@ -57,6 +57,7 @@ RUN noInstallRecommends="" && \
 		# already installed but here for consistency
 		curl \
 		file \
+		gettext-base \
 		gnupg \
 		gzip \
 		jq \
@@ -116,7 +117,7 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
-ENV COMPOSE_VER 2.16.0
+ENV COMPOSE_VER 2.17.2
 ENV COMPOSE_SWITCH_VERSION 1.0.5
 RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	mkdir -p $dockerPluginDir && \
