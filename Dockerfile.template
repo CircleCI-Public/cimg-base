@@ -4,6 +4,10 @@
 
 FROM %%PARENT%%:%%VERSION_FULL%%
 
+ARG CANDIDATE=java
+ARG CANDIDATE_VERSION=22.3.r11-grl
+ENV SDKMAN_DIR=/circleci/.sdkman
+
 LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
 
 # Change default shell for RUN from Dash to Bash
@@ -100,6 +104,17 @@ RUN noInstallRecommends="" && \
 	# Quick test of the git & git-lfs install
 	git version && git lfs version && \
 	rm -rf /var/lib/apt/lists/*
+
+# install requirements, install and configure sdkman
+# see https://sdkman.io/usage for configuration options
+# via https://stackoverflow.com/a/59027589/400729
+RUN curl -s "https://get.sdkman.io" | bash && \
+    echo "sdkman_auto_answer=true" > $SDKMAN_DIR/etc/config && \
+    echo "sdkman_auto_selfupdate=false" >> $SDKMAN_DIR/etc/config
+
+# Source sdkman to make the sdk command available and install candidate
+RUN bash -c "source $SDKMAN_DIR/bin/sdkman-init.sh && sdk install $CANDIDATE $CANDIDATE_VERSION"
+
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
 ENV DOCKER_VERSION 5:20.10.23~3-0~ubuntu-
