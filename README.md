@@ -10,7 +10,7 @@
 
 [![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/cimg-base.svg?style=shield)](https://circleci.com/gh/CircleCI-Public/cimg-base) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/cimg-base/main/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/cimg/base)](https://hub.docker.com/r/cimg/base) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/circleci-images) [![Repository](https://img.shields.io/badge/github-README-brightgreen)](https://github.com/CircleCI-Public/cimg-base)
 
-[![InsightsSnapshot](https://dl.circleci.com/insights-snapshot/gh/CircleCI-Public/cimg-base/main/main/badge.svg)](https://app.circleci.com/insights/github/CircleCI-Public/cimg-base/workflows/main?branch=main)  
+[![InsightsSnapshot](https://dl.circleci.com/insights-snapshot/gh/CircleCI-Public/cimg-base/main/main/badge.svg)](https://app.circleci.com/insights/github/CircleCI-Public/cimg-base/workflows/main?branch=main)
 
 `cimg/base` is an Ubuntu Docker image created by CircleCI with continuous integration builds in mind.
 As its name suggests, this image is designed to serve as a base image for other CircleCI Convenience Images (images prefixed with `cimg/`).
@@ -141,7 +141,7 @@ For example, you would run the following from the root of the repo:
 ./shared/gen-dockerfiles.sh 20.04 22.04
 ```
 
-The generated Dockerfile will be located at `./20.04/Dockefile` and `./20.04/Dockerfile`.
+The generated Dockerfile will be located at `./20.04/Dockefile` and `./22.04/Dockerfile`.
 To build the first image locally and try it out, you can run the following:
 
 ```bash
@@ -219,9 +219,9 @@ We encourage [issues](https://github.com/CircleCI-Public/cimg-base/issues) and [
 
 ## Additional Resources
 
-[CircleCI Docs](https://circleci.com/docs/) - The official CircleCI Documentation website.  
+[CircleCI Docs](https://circleci.com/docs/) - The official CircleCI Documentation website.
 [CircleCI Configuration Reference](https://circleci.com/docs/2.0/configuration-reference/#section=configuration) - From CircleCI Docs, the configuration reference page is one of the most useful pages we have.
-It will list all of the keys and values supported in `.circleci/config.yml`.  
+It will list all of the keys and values supported in `.circleci/config.yml`.
 [Docker Docs](https://docs.docker.com/) - For simple projects this won't be needed but if you want to dive deeper into learning Docker, this is a great resource.
 
 ## License
