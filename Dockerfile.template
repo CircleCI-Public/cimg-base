@@ -82,6 +82,7 @@ RUN noInstallRecommends="" && \
 		# compiling tool
 		pkg-config \
 		postgresql-client \
+		python-is-python3 \
 		shellcheck \
 		software-properties-common \
 		# already installed but here for consistency
@@ -99,6 +100,8 @@ RUN noInstallRecommends="" && \
 	curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | bash && apt-get install -y git-lfs && \
 	# Quick test of the git & git-lfs install
 	git version && git lfs version && \
+	# Smoke test for python aliasing
+	python --version && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
