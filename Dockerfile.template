@@ -83,6 +83,7 @@ RUN noInstallRecommends="" && \
 		pkg-config \
 		postgresql-client \
 		python-is-python3 \
+		retry \
 		shellcheck \
 		software-properties-common \
 		# already installed but here for consistency
