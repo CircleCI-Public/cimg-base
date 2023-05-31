@@ -19,6 +19,10 @@ This image is also very useful for CircleCI users to use as a base for their own
 
 This image contains the minimum tools required to operate a build on CircleCI (such as `git`) as well as extremely popular and useful tools in CircleCI (such as `docker`).
 
+## Support Policy
+
+The CircleCI Docker Convenience Image support policy can be found on the [CircleCI docs](https://circleci.com/docs/convenience-images-support-policy) site. This policy outlines the release, update, and deprecation policy for CircleCI Docker Convenience Images.
+
 ## Table of Contents
 
 - [Getting Started](#getting-started)
