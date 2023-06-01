@@ -19,6 +19,10 @@ This image is also very useful for CircleCI users to use as a base for their own
 
 This image contains the minimum tools required to operate a build on CircleCI (such as `git`) as well as extremely popular and useful tools in CircleCI (such as `docker`).
 
+## Support Policy
+
+The CircleCI Docker Convenience Image support policy can be found on the [CircleCI docs](https://circleci.com/docs/convenience-images-support-policy) site. This policy outlines the release, update, and deprecation policy for CircleCI Docker Convenience Images.
+
 ## Table of Contents
 
 - [Getting Started](#getting-started)
@@ -211,11 +215,9 @@ This will re-create the monthly snapshot for the current month.
 
 ## Contributing
 
-We encourage [issues](https://github.com/CircleCI-Public/cimg-base/issues) and [pull requests](https://github.com/CircleCI-Public/cimg-base/pulls) against this repository. In order to value your time, here are some things to consider:
+We encourage [issues](https://github.com/CircleCI-Public/cimg-base/issues) and [pull requests](https://github.com/CircleCI-Public/cimg-base/pulls) against this repository.
 
-1. We won't include just anything in this image. In order for us to add a tool within the base image, it has to be something that is maintained and useful to a majority of CircleCI users. Every tool added makes the image larger and slower for all users, so being thorough on what goes in the image will benefit everyone.
-1. PRs are welcome. If you have a PR that will potentially take a large amount of time to make, it will be better to open an issue to discuss it first to make sure it's something worth investing the time in.
-1. Issues should be used to report bugs or request additional/removal of tools in this image. For help with images, please visit [CircleCI Discuss](https://discuss.circleci.com/c/ecosystem/circleci-images).
+Please check out our [contributing guide](.github/CONTRIBUTING) which outlines best practices for contributions and what you can expect from the images team at CircleCI.
 
 ## Additional Resources
 
