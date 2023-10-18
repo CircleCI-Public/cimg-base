@@ -97,7 +97,7 @@ commands:
           command: |
             COSIGN_REPOSITORY=cimg/signatures
             export COSIGN_REPOSITORY
-            
+
             while IFS= read -r line; do
               IFS=' ' read -ra slugs \<<< "$line"
               parseNext=false

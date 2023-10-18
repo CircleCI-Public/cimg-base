@@ -83,6 +83,7 @@ RUN noInstallRecommends="" && \
 		pkg-config \
 		postgresql-client \
 		python-is-python3 \
+		retry \
 		shellcheck \
 		software-properties-common \
 		# already installed but here for consistency
@@ -105,7 +106,7 @@ RUN noInstallRecommends="" && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
-ENV DOCKER_VERSION 5:20.10.23~3-0~ubuntu-
+ENV DOCKER_VERSION 5:24.0.6-1~ubuntu
 RUN apt-get update && apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
@@ -114,13 +115,13 @@ RUN apt-get update && apt-get install -y \
 		software-properties-common && \
 	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
 	add-apt-repository -y "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/ubuntu $( lsb_release -cs ) stable" && \
-	apt-get install -y docker-ce=${DOCKER_VERSION}$( lsb_release -cs ) docker-ce-cli=${DOCKER_VERSION}$( lsb_release -cs ) containerd.io && \
+	apt-get install -y docker-ce=${DOCKER_VERSION}.$( lsb_release -rs )~$( lsb_release -cs ) docker-ce-cli=${DOCKER_VERSION}.$( lsb_release -rs )~$( lsb_release -cs ) containerd.io && \
 	# Quick test of the Docker install
 	docker --version && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
-ENV COMPOSE_VER 2.17.3
+ENV COMPOSE_VER 2.23.0
 ENV COMPOSE_SWITCH_VERSION 1.0.5
 RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	mkdir -p $dockerPluginDir && \
