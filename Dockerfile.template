@@ -4,7 +4,7 @@
 
 FROM %%PARENT%%:%%VERSION_FULL%%
 
-LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
+LABEL maintainer="CircleCI Execution Team <eng-execution@circleci.com>"
 
 # Change default shell for RUN from Dash to Bash
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
