@@ -1,8 +1,5 @@
 version: 2.1
 
-orbs:
-  aws-cli: circleci/aws-cli@4.1.0
-
 parameters:
   cron:
     type: boolean
@@ -16,7 +13,6 @@ workflows:
       - test:
           context: cimg-publishing
       - publish-monthly:
-          sign_arn: arn:aws:iam::483285841698:role/cpe-kms-sign
           requires:
             - test
           context: cimg-publishing
@@ -47,7 +43,6 @@ workflows:
               ignore: /.*/
           context: cimg-publishing
       - publish-monthly:
-          sign_arn: arn:aws:iam::483285841698:role/cpe-kms-sign
           requires:
             - test
           filters:
@@ -65,59 +60,6 @@ commands:
           command: |
             sudo apt-get update
             sudo apt-get install -y qemu-user-static binfmt-support
-  sign-images:
-    parameters:
-      sign_arn:
-        type: string
-      sign_session:
-        type: string
-        default: "sign-docker-images"
-      sign_profile_name:
-        type: string
-        default: "default"
-    steps:
-      - run:
-          name: Install Cosign
-          command: |
-            url="https://github.com/sigstore/cosign/releases/latest/download/cosign-linux"
-            [[ $(uname -m) == "x86_64" ]] && ARCH="amd64" || ARCH="arm64"
-
-            if ! cosign version &> /dev/null; then
-              curl -O -L "$url-$ARCH" && \
-              sudo mv cosign-linux-$ARCH /usr/local/bin/cosign && \
-              sudo chmod +x /usr/local/bin/cosign
-            fi
-      - aws-cli/setup:
-          region: ${AWS_DEFAULT_REGION}
-          role_arn: <<parameters.sign_arn>>
-          role_session_name: <<parameters.sign_session>>
-          profile_name: <<parameters.sign_profile_name>>
-      - run:
-          name: "Sign Images"
-          command: |
-            COSIGN_REPOSITORY=cimg/signatures
-            export COSIGN_REPOSITORY
-
-            while IFS= read -r line; do
-              IFS=' ' read -ra slugs \<<< "$line"
-              parseNext=false
-
-              for slug in "${slugs[@]}"; do
-                if [ "$slug" == "-t" ]; then
-                  parseNext=true
-                elif [ "$parseNext" == true ]; then
-                  slug=${slug//\$\{VERSION\}/$(date +%Y.%m)}
-                  docker buildx imagetools inspect "$slug" --format "{{json .Manifest}}" > manifest.json
-                  digest=$(jq -r ".digest" "manifest.json")
-                  if [[ $slug =~ [0-9]+\.[0-9]+\- ]]; then
-                    cosign sign --yes --recursive --key "$KMS_KEY" "$slug@$digest"
-                    cosign verify --key "$KMS_KEY" "$slug"
-                  fi
-                  parseNext=false
-                fi
-              done
-            done < ./push-monthly-images.sh
-
 
 jobs:
   test:
@@ -166,15 +108,6 @@ jobs:
             fi
 
   publish-monthly:
-    parameters:
-      sign_arn:
-        type: string
-      sign_session:
-        type: string
-        default: "sign-docker-images"
-      sign_profile_name:
-        type: string
-        default: "default"
     machine:
       image: ubuntu-2204:2022.07.1
     steps:
@@ -192,7 +125,3 @@ jobs:
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
               ./push-monthly-images.sh
             fi
-      - sign-images:
-          sign_arn: <<parameters.sign_arn>>
-          sign_session: <<parameters.sign_session>>
-          sign_profile_name: <<parameters.sign_profile_name>>
