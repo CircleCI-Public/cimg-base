@@ -135,7 +135,7 @@ RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	# Tests if docker-compose for v1 is transposed to v2
 	docker-compose version
 
-RUN YQ_ARCH=(dpkg --print-architecture) && \
+RUN YQ_ARCH=$(dpkg --print-architecture) && \
 	curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.42.1/yq_linux_$YQ_ARCH.tar.gz" | \
 	tar -xz -C /usr/local/bin && \
 	mv /usr/local/bin/yq{_linux_$YQ_ARCH,}
