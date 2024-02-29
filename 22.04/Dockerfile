@@ -4,7 +4,7 @@
 
 FROM ubuntu:22.04
 
-LABEL maintainer="Community & Partner Engineering Team <community-partner@circleci.com>"
+LABEL maintainer="CircleCI Execution Team <eng-execution@circleci.com>"
 
 # Change default shell for RUN from Dash to Bash
 SHELL ["/bin/bash", "-exo", "pipefail", "-c"]
@@ -106,7 +106,7 @@ RUN noInstallRecommends="" && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
-ENV DOCKER_VERSION 5:24.0.6-1~ubuntu
+ENV DOCKER_VERSION 5:25.0.3-1~ubuntu
 RUN apt-get update && apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
@@ -121,7 +121,7 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
-ENV COMPOSE_VER 2.23.0
+ENV COMPOSE_VER 2.24.5
 ENV COMPOSE_SWITCH_VERSION 1.0.5
 RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	mkdir -p $dockerPluginDir && \
@@ -135,9 +135,10 @@ RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	# Tests if docker-compose for v1 is transposed to v2
 	docker-compose version
 
-RUN curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.31.2/yq_linux_amd64.tar.gz" | \
+RUN YQ_ARCH=$(dpkg --print-architecture) && \
+	curl -sSL "https://github.com/mikefarah/yq/releases/download/v4.42.1/yq_linux_$YQ_ARCH.tar.gz" | \
 	tar -xz -C /usr/local/bin && \
-	mv /usr/local/bin/yq{_linux_amd64,}
+	mv /usr/local/bin/yq{_linux_$YQ_ARCH,}
 
 USER circleci
 # Run commands and tests as circleci user
