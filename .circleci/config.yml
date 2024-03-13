@@ -11,25 +11,31 @@ workflows:
     # Publishes the `YYYY.MM` tag as well as the `current` tag
     jobs:
       - test:
-          context: cimg-publishing
+          context:
+            - cimg-docker-image-building
       - publish-monthly:
           requires:
             - test
-          context: cimg-publishing
+          context:
+            - cimg-docker-image-building
+            - cimg-docker-image-publishing
   main:
     when:
       not: << pipeline.parameters.cron >>
     # Always runs. When the main branch runs, publishes the `edge` Docker tag
     jobs:
       - test:
-          context: cimg-publishing
+          context:
+            - cimg-docker-image-building
       - publish-edge:
           requires:
             - test
           filters:
             branches:
               only: main
-          context: cimg-publishing
+          context:
+            - cimg-docker-image-building
+            - cimg-docker-image-publishing
   manual-monthly:
     when:
       not: << pipeline.parameters.cron >>
@@ -41,7 +47,8 @@ workflows:
               only: /^monthly$/
             branches:
               ignore: /.*/
-          context: cimg-publishing
+          context:
+            - cimg-docker-image-building
       - publish-monthly:
           requires:
             - test
@@ -50,7 +57,9 @@ workflows:
               only: /^monthly$/
             branches:
               ignore: /.*/
-          context: cimg-publishing
+          context:
+            - cimg-docker-image-building
+            - cimg-docker-image-publishing
 
 commands:
   setup-buildx-deps:
