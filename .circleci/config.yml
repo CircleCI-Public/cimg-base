@@ -81,22 +81,6 @@ jobs:
           name: "Build Dockerfiles"
           command: |
             ./build-images.sh
-            echo 'export DOCKER_PASS=$DOCKER_TOKEN' >> $BASH_ENV
-      - run:
-          name: "Publish Docker Hub Description (main branch only)"
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "main" ]; then
-
-              echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
-
-              # Update the Docker Hub description
-              SONAR_VER=0.15.0
-              SONAR_URL="https://github.com/felicianotech/sonar/releases/download/v${SONAR_VER}/sonar-v${SONAR_VER}-linux-amd64.tar.gz"
-              mkdir -p $HOME/bin
-              curl -sSL $SONAR_URL | tar -xz -C $HOME/bin sonar
-
-              sonar set description cimg/base ./README.md
-            fi
 
   publish-edge:
     machine:
@@ -114,6 +98,21 @@ jobs:
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
               echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
               ./push-base-images.sh
+            fi
+      - run:
+          name: "Publish Docker Hub Description (main branch only)"
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "main" ]; then
+
+              echo $DOCKER_TOKEN | docker login -u $DOCKER_USER --password-stdin
+
+              # Update the Docker Hub description
+              SONAR_VER=0.15.0
+              SONAR_URL="https://github.com/felicianotech/sonar/releases/download/v${SONAR_VER}/sonar-v${SONAR_VER}-linux-amd64.tar.gz"
+              mkdir -p $HOME/bin
+              curl -sSL $SONAR_URL | tar -xz -C $HOME/bin sonar
+
+              sonar set description cimg/base ./README.md
             fi
 
   publish-monthly:
