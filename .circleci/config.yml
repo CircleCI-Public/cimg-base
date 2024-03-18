@@ -112,6 +112,9 @@ jobs:
               mkdir -p $HOME/bin
               curl -sSL $SONAR_URL | tar -xz -C $HOME/bin sonar
 
+              # sonar requres "DOCKER_PASS" to be set
+              export DOCKER_PASS=$DOCKER_TOKEN
+              
               sonar set description cimg/base ./README.md
             fi
 
