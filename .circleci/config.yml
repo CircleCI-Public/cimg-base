@@ -74,6 +74,7 @@ jobs:
   test:
     machine:
       image: ubuntu-2204:current
+    resource_class: 2xlarge+
     steps:
       - checkout
       - setup-buildx-deps
@@ -85,6 +86,7 @@ jobs:
   publish-edge:
     machine:
       image: ubuntu-2204:current
+    resource_class: 2xlarge+
     steps:
       - checkout
       - setup-buildx-deps
@@ -121,6 +123,7 @@ jobs:
   publish-monthly:
     machine:
       image: ubuntu-2204:current
+    resource_class: 2xlarge+
     steps:
       - checkout
       - setup-buildx-deps
