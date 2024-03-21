@@ -12,11 +12,15 @@ workflows:
     jobs:
       - test:
           context:
+            - slack-notification-access-token
+            - slack-cimg-notifications
             - cimg-docker-image-building
       - publish-monthly:
           requires:
             - test
           context:
+            - slack-notification-access-token
+            - slack-cimg-notifications
             - cimg-docker-image-building
             - cimg-docker-image-publishing
   main:
@@ -26,6 +30,8 @@ workflows:
     jobs:
       - test:
           context:
+            - slack-notification-access-token
+            - slack-cimg-notifications
             - cimg-docker-image-building
       - publish-edge:
           requires:
@@ -34,6 +40,8 @@ workflows:
             branches:
               only: main
           context:
+            - slack-notification-access-token
+            - slack-cimg-notifications
             - cimg-docker-image-building
             - cimg-docker-image-publishing
   manual-monthly:
@@ -48,6 +56,8 @@ workflows:
             branches:
               ignore: /.*/
           context:
+            - slack-notification-access-token
+            - slack-cimg-notifications
             - cimg-docker-image-building
       - publish-monthly:
           requires:
@@ -58,6 +68,8 @@ workflows:
             branches:
               ignore: /.*/
           context:
+            - slack-notification-access-token
+            - slack-cimg-notifications
             - cimg-docker-image-building
             - cimg-docker-image-publishing
 
