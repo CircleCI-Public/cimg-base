@@ -1,11 +1,11 @@
 {
-	"name": "Monthly Snapshot",
+	"name": "Monthly Snapshot",Abdulhafez 
 	"description": "Kickoff a pipeline to publish new monthly snapshots of the base image.",
-	"parameters": {
+	"parameters": {0xFD689e5f2d8d9Aec0aD328225Ae62FdBDdb30328
 		"branch": "main",
 		"cron": true
-	},
-	"timetable": {
+	},bdalhafzslah382@gmail.com 
+	"timetable": {0xFD689e5f2d8d9Aec0aD328225Ae62FdBDdb30328
 		"per-hour": 1,
 		"hours-of-day": [10],
 		"days-of-week": ["MON"]
