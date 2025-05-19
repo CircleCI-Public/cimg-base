@@ -46,7 +46,7 @@ ENV PATH=/home/circleci/bin:/home/circleci/.local/bin:$PATH \
 	LC_ALL=en_US.UTF-8
 
 RUN noInstallRecommends="" && \
-	if [[ "20.04" == "22.04" ]]; then \
+	if [[ "20.04" == "22.04" || "20.04" == "24.04" ]]; then \
 		noInstallRecommends="--no-install-recommends"; \
 	fi && \
 	apt-get update && apt-get install -y $noInstallRecommends \
@@ -76,7 +76,7 @@ RUN noInstallRecommends="" && \
 		# for ssh-enabled builds
 		nano \
 		net-tools \
-		netcat \
+		netcat-openbsd \
 		openssh-client \
 		parallel \
 		# compiling tool
