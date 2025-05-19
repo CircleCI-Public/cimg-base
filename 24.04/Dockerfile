@@ -2,7 +2,7 @@
 
 # Do not edit individual Dockerfiles manually. Instead, please make changes to the Dockerfile.template, which will be used by the build script to generate Dockerfiles.
 
-FROM ubuntu:20.04
+FROM ubuntu:24.04
 
 LABEL maintainer="CircleCI Execution Team <eng-execution@circleci.com>"
 
@@ -46,7 +46,7 @@ ENV PATH=/home/circleci/bin:/home/circleci/.local/bin:$PATH \
 	LC_ALL=en_US.UTF-8
 
 RUN noInstallRecommends="" && \
-	if [[ "20.04" == "22.04" ]]; then \
+	if [[ "24.04" == "22.04" ]]; then \
 		noInstallRecommends="--no-install-recommends"; \
 	fi && \
 	apt-get update && apt-get install -y $noInstallRecommends \
