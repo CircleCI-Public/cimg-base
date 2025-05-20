@@ -46,7 +46,7 @@ ENV PATH=/home/circleci/bin:/home/circleci/.local/bin:$PATH \
 	LC_ALL=en_US.UTF-8
 
 RUN noInstallRecommends="" && \
-	if [[ "22.04" == "22.04" ]]; then \
+	if [[ "22.04" == "22.04" || "22.04" == "24.04" ]]; then \
 		noInstallRecommends="--no-install-recommends"; \
 	fi && \
 	apt-get update && apt-get install -y $noInstallRecommends \
@@ -76,7 +76,7 @@ RUN noInstallRecommends="" && \
 		# for ssh-enabled builds
 		nano \
 		net-tools \
-		netcat \
+		netcat-openbsd \
 		openssh-client \
 		parallel \
 		# compiling tool
@@ -106,7 +106,7 @@ RUN noInstallRecommends="" && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
-ENV DOCKER_VERSION 5:25.0.3-1~ubuntu
+ENV DOCKER_VERSION=5:28.1.1-1~ubuntu
 RUN apt-get update && apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
@@ -121,7 +121,7 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
-ENV COMPOSE_VER 2.24.5
+ENV COMPOSE_VER 2.27.1
 ENV COMPOSE_SWITCH_VERSION 1.0.5
 RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	mkdir -p $dockerPluginDir && \

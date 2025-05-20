@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  cimg: circleci/cimg@0.6.4
+
 parameters:
   cron:
     type: boolean
@@ -10,14 +13,7 @@ workflows:
     when: << pipeline.parameters.cron >>
     # Publishes the `YYYY.MM` tag as well as the `current` tag
     jobs:
-      - test:
-          context:
-            - slack-notification-access-token
-            - slack-cimg-notifications
-            - cimg-docker-image-building
       - publish-monthly:
-          requires:
-            - test
           context:
             - slack-notification-access-token
             - slack-cimg-notifications
@@ -28,14 +24,33 @@ workflows:
       not: << pipeline.parameters.cron >>
     # Always runs. When the main branch runs, publishes the `edge` Docker tag
     jobs:
-      - test:
+      - cimg/build-and-deploy:
+          name: "Test"
+          resource-class: 2xlarge+
+          docker-namespace: ccitest
+          docker-repository: base
+          filters:
+            branches:
+              ignore:
+                - main
+          context: 
+            - slack-notification-access-token
+            - slack-cimg-notifications
+            - cimg-docker-image-building
+      - cimg/build-and-deploy:
+          name: "Deploy"
+          resource-class: 2xlarge+
+          docker-repository: base
+          filters:
+            branches:
+              only:
+                - main
           context:
             - slack-notification-access-token
             - slack-cimg-notifications
             - cimg-docker-image-building
+            - cimg-docker-image-publishing
       - publish-edge:
-          requires:
-            - test
           filters:
             branches:
               only: main
@@ -49,19 +64,7 @@ workflows:
       not: << pipeline.parameters.cron >>
     # Used to respin this month's snapshot
     jobs:
-      - test:
-          filters:
-            tags:
-              only: /^monthly$/
-            branches:
-              ignore: /.*/
-          context:
-            - slack-notification-access-token
-            - slack-cimg-notifications
-            - cimg-docker-image-building
       - publish-monthly:
-          requires:
-            - test
           filters:
             tags:
               only: /^monthly$/
@@ -83,18 +86,6 @@ commands:
             sudo apt-get install -y qemu-user-static binfmt-support
 
 jobs:
-  test:
-    machine:
-      image: ubuntu-2204:current
-    resource_class: 2xlarge+
-    steps:
-      - checkout
-      - setup-buildx-deps
-      - run:
-          name: "Build Dockerfiles"
-          command: |
-            ./build-images.sh
-
   publish-edge:
     machine:
       image: ubuntu-2204:current
@@ -106,7 +97,7 @@ jobs:
           name: "Build & Tag Images"
           command: |
             ./build-base-images.sh
-      - deploy:
+      - run:
           name: "Publish Docker Images (main branch only)"
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
@@ -144,7 +135,7 @@ jobs:
           command: |
             # This script is currently edited by hand
             ./build-monthly-images.sh
-      - deploy:
+      - run:
           name: "Publish Docker Images (main branch only)"
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ] || [ "${CIRCLE_TAG}" == "monthly" ]; then
