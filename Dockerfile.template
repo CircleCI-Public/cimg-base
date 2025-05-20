@@ -45,11 +45,7 @@ ENV PATH=/home/circleci/bin:/home/circleci/.local/bin:$PATH \
 	LANGUAGE=en_US:en \
 	LC_ALL=en_US.UTF-8
 
-RUN noInstallRecommends="" && \
-	if [[ "%%VERSION_FULL%%" == "22.04" || "%%VERSION_FULL%%" == "24.04" ]]; then \
-		noInstallRecommends="--no-install-recommends"; \
-	fi && \
-	apt-get update && apt-get install -y $noInstallRecommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 		autoconf \
 		build-essential \
 		ca-certificates \
