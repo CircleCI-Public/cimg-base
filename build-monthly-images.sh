@@ -7,5 +7,5 @@ VERSION=$( date +%Y.%m )
 
 echo "The 'version' is ${VERSION}"
 
-docker buildx build --platform=linux/amd64,linux/arm64 --file 22.04/Dockerfile -t cimg/base:${VERSION}-22.04 -t cimg/base:${VERSION} -t cimg/base:current-22.04 -t cimg/base:current .
-docker buildx build --platform=linux/amd64,linux/arm64 --file 24.04/Dockerfile -t cimg/base:${VERSION}-24.04 -t cimg/base:current-24.04 .
+docker buildx build --platform=linux/amd64,linux/arm64 --file 22.04/Dockerfile -t cimg/base:${VERSION}-22.04 -t cimg/base:current-22.04 .
+docker buildx build --platform=linux/amd64,linux/arm64 --file 24.04/Dockerfile -t cimg/base:${VERSION}-24.04 -t cimg/base:${VERSION} -t cimg/base:current-24.04 -t cimg/base:current .
