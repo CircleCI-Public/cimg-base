@@ -77,8 +77,8 @@ cimg/base:<YYYY.MM>[-version]
 
 `edge` - This image tag points to the latest version of the Base image.
 This tag is built from the `HEAD` of the `main` branch.
-The `edge` tag is intended to be used as a testing version of the image with the most recent changes however not guaranteed to be all that stable
-Software an be added for test that might actually be removed before the next monthly snapshot..
+The `edge` tag is intended to be used as a testing version of the image with the most recent changes however not guaranteed to be all that stable.
+Software can be added for tests that might actually be removed before the next monthly snapshot.
 This tag is not recommended for production software.
 
 `current` - This image tag points to the most recent monthly snapshot.
