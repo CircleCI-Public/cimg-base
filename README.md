@@ -5,7 +5,7 @@
 		<img alt="Ubuntu Logo" src="https://raw.github.com/CircleCI-Public/cimg-base/main/img/circle-ubuntu.svg?sanitize=true" width="75" />
 	</p>
 	<h1>CircleCI Convenience Images => Base</h1>
-	<h3>A Continous Integration focused Ubuntu Docker image built to run on CircleCI</h3>
+	<h3>A Continuous Integration focused Ubuntu Docker image built to run on CircleCI</h3>
 </div>
 
 [![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/cimg-base.svg?style=shield)](https://circleci.com/gh/CircleCI-Public/cimg-base) [![Software License](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/CircleCI-Public/cimg-base/main/LICENSE) [![Docker Pulls](https://img.shields.io/docker/pulls/cimg/base)](https://hub.docker.com/r/cimg/base) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/circleci-images) [![Repository](https://img.shields.io/badge/github-README-brightgreen)](https://github.com/CircleCI-Public/cimg-base)
