@@ -26,7 +26,7 @@ workflows:
     jobs:
       - cimg/build-and-deploy:
           name: "Test"
-          resource-class: 2xlarge+
+          resource-class: 2xlarge+.gen2
           docker-namespace: ccitest
           docker-repository: base
           filters:
@@ -39,7 +39,7 @@ workflows:
             - cimg-docker-image-building
       - cimg/build-and-deploy:
           name: "Deploy"
-          resource-class: 2xlarge+
+          resource-class: 2xlarge+.gen2
           docker-repository: base
           filters:
             branches:
@@ -88,8 +88,8 @@ commands:
 jobs:
   publish-edge:
     machine:
-      image: ubuntu-2204:current
-    resource_class: 2xlarge+
+      image: ubuntu-2604:current
+    resource_class: 2xlarge+.gen2
     steps:
       - checkout
       - setup-buildx-deps
@@ -125,8 +125,8 @@ jobs:
 
   publish-monthly:
     machine:
-      image: ubuntu-2204:current
-    resource_class: 2xlarge+
+      image: ubuntu-2604:current
+    resource_class: 2xlarge+.gen2
     steps:
       - checkout
       - setup-buildx-deps
