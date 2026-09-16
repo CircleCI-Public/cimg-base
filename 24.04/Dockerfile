@@ -90,7 +90,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		# for ssh-enabled builds
 		vim \
 		wget \
-		zip && \
+		zip \
+		# for compression
+		zstd && \
 	# get the semi-official latest-stable git instead of using the old(er) version from the ubuntu distro
 	add-apt-repository ppa:git-core/ppa && apt-get install -y git && \
 	# get the semi-official latest-stable git-lfs too
