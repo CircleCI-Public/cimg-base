@@ -90,7 +90,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 		# for ssh-enabled builds
 		vim \
 		wget \
-		zip && \
+		zip \
+		# for compression
+		zstd && \
 	# get the semi-official latest-stable git instead of using the old(er) version from the ubuntu distro
 	add-apt-repository ppa:git-core/ppa && apt-get install -y git && \
 	# get the semi-official latest-stable git-lfs too
@@ -102,7 +104,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker - needs the setup_remote_docker CircleCI step to work
-ENV DOCKER_VERSION=5:29.7.2-1~ubuntu
+ENV DOCKER_VERSION=5:29.8.1-1~ubuntu
 RUN apt-get update && apt-get install -y \
 		apt-transport-https \
 		ca-certificates \
@@ -121,7 +123,7 @@ RUN apt-get update && apt-get install -y \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
-ENV COMPOSE_VER=2.27.2
+ENV COMPOSE_VER=5.5.1
 ENV COMPOSE_SWITCH_VERSION=1.0.5
 RUN dockerPluginDir=/usr/local/lib/docker/cli-plugins && \
 	mkdir -p $dockerPluginDir && \
