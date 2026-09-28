@@ -116,9 +116,10 @@ RUN apt-get update && apt-get install -y \
 	chmod a+r /etc/apt/keyrings/docker.asc && \
 	echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $( lsb_release -cs ) stable" > /etc/apt/sources.list.d/docker.list && \
 	apt-get update && \
-	apt-get install -y docker-ce=${DOCKER_VERSION}.$( lsb_release -rs )~$( lsb_release -cs ) docker-ce-cli=${DOCKER_VERSION}.$( lsb_release -rs )~$( lsb_release -cs ) containerd.io && \
+	apt-get install -y docker-ce=${DOCKER_VERSION}.$( lsb_release -rs )~$( lsb_release -cs ) docker-ce-cli=${DOCKER_VERSION}.$( lsb_release -rs )~$( lsb_release -cs ) containerd.io docker-buildx-plugin && \
 	# Quick test of the Docker install
 	docker --version && \
+	docker buildx version && \
 	rm -rf /var/lib/apt/lists/*
 
 # Install Docker Compose - see prerequisite above
