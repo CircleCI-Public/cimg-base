@@ -33,7 +33,7 @@ RUN echo 'APT::Get::Assume-Yes "true";' > /etc/apt/apt.conf.d/90circleci && \
 	sudo -u circleci mkdir -p /home/circleci/.local/bin && \
 	\
 	dockerizeArch=arm64 && \
-	if uname -p | grep "x86_64"; then \
+	if uname -m | grep "x86_64"; then \
 		dockerizeArch=x86_64; \
 	fi && \
 	curl -sSL --fail --retry 3 --output /usr/local/bin/dockerize "https://github.com/powerman/dockerize/releases/download/v0.8.0/dockerize-linux-${dockerizeArch}" && \
